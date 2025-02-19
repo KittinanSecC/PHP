@@ -43,8 +43,8 @@ function renderHeader($conn)
     echo '<ul>';
     echo '<li><a href="main.php">หน้าแรก</a></li>';
     echo '<li><a href="upload3.php">สินค้า</a></li>';
-    echo '<li><a href="Men.php">ผู้ชาย</a></li>';
-    echo '<li><a href="#">ผู้หญิง</a></li>';
+    echo '<li><a href="Women.php">ผู้ชาย</a></li>';
+    echo '<li><a href="Women.php">ผู้หญิง</a></li>';
     if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == 0) {
         echo '<li><a href="upload1.php">เพิ่มสินค้า</a></li>';
     }
@@ -58,11 +58,12 @@ function renderHeader($conn)
         echo '</div>';
     }
     echo '<div class="cart_section">';
-    echo '<a href="cart.php" class="btn1"><i class="fa-solid fa-bag-shopping"></i></i></a>'; // Cart icon
+    
     echo '<div class="search-bar">';
     echo '<button id="search-button"><i class="fa fa-search"></i></button>';
     echo '<input type="text" placeholder="ค้นหา" id="search-input">';
     echo '</div>';
+    echo '<a href="cart.php" class="btn1" style="margin-left:1rem;margin-right:1.4rem;"><i class="fa-solid fa-bag-shopping"></i></i></a>'; // Cart icon
 
 
     echo '</header>';
@@ -104,7 +105,7 @@ function renderFooter()
                     <ul class="footer-links">
                         <li><a href="upload3.php">สินค้า</a></li>
                         <li><a href="Men.php">ผู้ชาย</a></li>
-                        <li><a href="#">ผู้หญิง</a></li>
+                        <li><a href="Women.php">ผู้หญิง</a></li>
                     </ul>
                 </div>
 

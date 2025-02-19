@@ -28,6 +28,7 @@ if ($order_result === false) {
 
 $order = $order_result->fetch_assoc();
 
+
 if (!$order) {
     die("<h2>ไม่พบคำสั่งซื้อ</h2>");
 }
@@ -155,9 +156,18 @@ $items = $item_result->fetch_all(MYSQLI_ASSOC);
         </table>
 
         <h3>ยอดรวม: <?php echo number_format($order['total_price'], 2); ?> ฿</h3>
-
         <button onclick="history.back()" class="btn btn-dark">ย้อนกลับ</button>
+
+        <!-- Check if there is a payment proof and display the button -->
+        <?php if ($order['payment_proof']): ?>
+            <h3>หลักฐานการชำระเงิน:</h3>
+            <a href="<?php echo htmlspecialchars($order['payment_proof']); ?>" class="btn btn-dark">ดูสลิปการโอน</a>
+        <?php endif; ?>
+
+        
     </div>
+    </div>
+    
 
     <?php renderFooter(); ?>
 </body>

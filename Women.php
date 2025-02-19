@@ -5,7 +5,6 @@ session_start();
 include("include.php");
 include("structure.php");
 ?>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -119,9 +118,10 @@ include("structure.php");
     <!-- Hero Section -->
     <section class="hero">
 
-        <img src="assets/font/fonts.png" alt="font">
+        <img src="assets/font/fonts2.png" alt="font">
         <!-- ปุ่มดูข้อมูล -->
-        <a href="upload3.php" class="btn">ดูข้อมูล</a>
+        <a href="upload3.php" class="btn btn-dark">ดูข้อมูล</a>
+
 
 
     </section>
@@ -158,7 +158,7 @@ include("structure.php");
     </section><!--/brand-->
     <!--brand end -->
     <div class="container">
-        <h2>สินค้าสำหรับผู้ชาย</h2>
+        <h2>สินค้าสำหรับผู้หญิง</h2>
         <div class="products">
             <div class="product">
                 <img src="assets/cont/nike11.png" alt="Lifestyle Running Vomero">
@@ -186,9 +186,11 @@ include("structure.php");
     <script type="text/babel">
         function ShoeSlider() {
             const shoes = [
-                { name: "Nike Off", image: "myfile/nike_off.png" },
-                { name: "Nike Zoom", image: "myfile/Nike Zoom.png" },
-                { name: "Nike Jordan 1 low", image: "myfile/Air Jordan 1 Low1111.png" },
+                { name: "Air Jordan 1 Mid", image: "myfile/ajdm1.png" },
+                { name: "Metallic Silver and Black", image: "myfile/msab 1.png" },
+                { name: "Nike Air Max SC", image: "myfile/amsc1.png" },
+                { name: "Metallic Silver and Black", image: "myfile/msab 1.png" },
+                { name: "Nike Air Max SC", image: "myfile/amsc1.png" },
                 
 
             ];
@@ -363,6 +365,7 @@ include("structure.php");
    <?php
     renderFooter();
     ?>
+
 </body>
 
 </html>
