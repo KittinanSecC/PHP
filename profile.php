@@ -152,6 +152,7 @@ $user = $result->fetch_assoc();
             width: 100%;
             /* Keep image width to 100% */
         }
+
         /* Make card title font smaller */
         .card-title {
             min-height: 50px;

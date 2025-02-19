@@ -49,7 +49,6 @@ include("structure.php");
                             <label class="form-label">ค้นหาสินค้า</label>
                             <input type="text" name="filter" class="form-control" placeholder="พิมพ์ชื่อสินค้า..." value="<?= isset($_GET['filter']) ? $_GET['filter'] : ''; ?>">
                         </div>
-
                         <!-- Category Filter -->
                         <div class="mb-3">
                             <label class="form-label">หมวดหมู่</label>
@@ -59,7 +58,6 @@ include("structure.php");
                                 <option value="Women" <?= isset($_GET['category']) && $_GET['category'] == 'Women' ? 'selected' : ''; ?>>รองเท้าผู้หญิง</option>
                             </select>
                         </div>
-
                         <!-- Price Range -->
                         <div class="mb-3">
                             <label class="form-label">ช่วงราคา</label>
@@ -72,7 +70,6 @@ include("structure.php");
                     </form>
                 </div>
             </div>
-
             <!-- Product Grid -->
             <div class="col-md-9">
                 <div class="row">
@@ -112,9 +109,7 @@ include("structure.php");
                         default:
                             $strSQL .= " ORDER BY Name ASC";
                     }
-
                     $objQuery = mysqli_query($conn, $strSQL) or die("Error Query [" . $strSQL . "]");
-
                     while ($objResult = mysqli_fetch_array($objQuery)) {
                     ?>
                         <div class="col-md-4 mb-3 col-sm-6">
@@ -134,9 +129,7 @@ include("structure.php");
             </div>
         </div>
     </div>
-
     <?php renderFooter(); ?>
 </body>
-
 
 </html>

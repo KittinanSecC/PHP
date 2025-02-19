@@ -250,15 +250,17 @@ renderHeader($conn);
                         });
                     });
                 </script>
-                <div class="favorite-button">
-                    <button id="favorite-btn" data-product-id="<?= $id ?>" class="favorite <?= $is_favorite ? 'active' : '' ?>">
-                        <i id="heart-icon" class="<?= $is_favorite ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"
-                            style="color: <?= $is_favorite ? 'red' : 'gray' ?>;">
-                        </i>
-                        <span id="favorite-text"><?= $is_favorite ? 'ลบจากรายการโปรด' : 'เพิ่มในรายการโปรด' ?></span>
-                    </button>
+                <?php if (isset($_SESSION['user_id'])) : ?>
+                    <div class="favorite-button">
+                        <button id="favorite-btn" data-product-id="<?= $id ?>" class="favorite <?= $is_favorite ? 'active' : '' ?>">
+                            <i id="heart-icon" class="<?= $is_favorite ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"
+                                style="color: <?= $is_favorite ? 'red' : 'gray' ?>;">
+                            </i>
+                            <span id="favorite-text"><?= $is_favorite ? 'ลบจากรายการโปรด' : 'เพิ่มในรายการโปรด' ?></span>
+                        </button>
+                    </div>
+                <?php endif; ?>
 
-                </div>
 
                 <div class="description">
                     <h4>รายละเอียดสินค้า</h4>
