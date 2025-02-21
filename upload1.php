@@ -16,12 +16,8 @@ include("structure.php");
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-
         form {
+            width: 500px;
             max-width: 500px;
             margin: 50px auto;
             padding: 20px;
@@ -79,6 +75,16 @@ include("structure.php");
         form input[type="submit"]:hover {
             background-color: rgb(0, 0, 0);
         }
+
+        form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
     </style>
 
 </head>
@@ -111,6 +117,8 @@ include("structure.php");
             <option value="Men">ชาย</option>
             <option value="Women">หญิง</option>
         </select><br>
+        <label for="txtDescription">รายละเอียดสินค้า:</label>
+        <textarea name="txtDescription" id="txtDescription" rows="4"></textarea><br>
 
         <label for="filUpload1">รูปภาพ 1 :</label>
         <input type="file" name="filUpload1" id="filUpload1" required><br>

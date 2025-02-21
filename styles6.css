@@ -1,11 +1,4 @@
 /* รีเซ็ตสไตล์เบื้องต้น */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-}
-
 .cart-container {
     max-width: 900px;
     margin: 40px auto;
@@ -80,7 +73,7 @@ h2 {
     background: none;
     font-size: 20px;
     cursor: pointer;
-    color: #e74c3c;
+    color: #000000;
 }
 
 .cart-summary {

@@ -1,9 +1,15 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
 .top-bar {
     background-color: #f5f5f5;
     display: flex;
     justify-content: flex-end;
     padding: 8px 13px;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 12px;
     font-weight: bold;
     padding-right: 40px;
@@ -30,13 +36,28 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #FFFFFF;
-    color: #fff;
-    padding: 1px 2px;
-    /* ลด padding ด้านบนและล่าง */
-    height: 60px;
-    /* ลดความสูงของ header */
-    padding-right: 40px;
+    margin: 5px;
+}
+
+.cart_section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart_section a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    margin-top: 5px;
+    border-radius: 50%;
+    background-color: white;
+    border: none;
+    /* เอาขอบออก */
+    box-shadow: none;
+    /* เอาเงาออก */
 }
 
 header .logo img {
@@ -82,8 +103,10 @@ header nav ul li a:hover {
     border-radius: 30px;
     background-color: #f5f5f5;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 4px 8px;
+    padding: 1px 1px;
     transition: all 0.3s ease-in-out;
+
+    margin-left: 10px;
 
 }
 
@@ -91,7 +114,7 @@ header nav ul li a:hover {
     width: 100%;
     border: none;
     outline: none;
-    border-radius: 25px;
+    border-radius: 20px;
     font-size: 16px;
     color: #333;
     transition: 0.3s ease;
@@ -134,3 +157,31 @@ header nav ul li a:hover {
     margin: 20px 0;
 }
 
+.no-caret::after {
+    display: none;
+}
+
+.btn1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    height: 40px;
+    /* ปรับขนาดสูงขึ้น */
+    width: 40px;
+    /* ปรับขนาดกว้างขึ้น */
+    border-radius: 75%;
+    background-color: white;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* เพิ่มเงาให้ดูมีมิติ */
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.btn1:hover {
+    background-color: #f0f0f0;
+    /* เปลี่ยนสีตอน hover */
+    transform: scale(1.1);
+    /* ขยายขึ้นเล็กน้อยเมื่อ hover */
+}

@@ -9,7 +9,7 @@ include("structure.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สินค้าผู้ชายอย่างเป็นทางการของ Prime
+    <title>ร้านค้าอย่างเป็นทางการของ Prime Sneakers Store TH
     </title>
     <link rel="stylesheet" href="style2.css">
     <link href="assets/logo/Prime2.png" rel="icon">
@@ -26,325 +26,147 @@ include("structure.php");
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
+    <script src="assets/js/jquery.js"></script>
+    <!--modernizr.min.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <!--bootstrap.min.js-->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- bootsnav js -->
+    <script src="assets/js/bootsnav.js"></script>
+    <!--owl.carousel.js-->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 
-        .slider {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .shoe {
-            transition: 0.5s;
-            opacity: 0.5;
-        }
-
-        .shoe.active {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-    </style>
+    <!--Custom JS-->
+    <script src="assets/js/custom.js"></script>
 </head>
 
 <body>
     <?php
     renderHeader($conn)
     ?>
-    <!-- billbord -->
-    <section id="video-background" class="video-container">
-        <a href="upload3.php">
-            <video autoplay loop muted playsinline class="video-background">
-                <source src="assets/video/nike.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </a>
-    </section>
-    <!--brand strat -->
-    <section id="brand" class="brand">
-        <div class="container">
-            <div class="brand-area">
-                <div class="owl-carousel owl-theme brand-item">
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/nike.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/adidas.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/puma.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/nbb.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
+    <div id="promo-banner">
+        <p id="promo-text"></p>
+    </div>
+    <script>
+        const promos = [
+            "ยินดีต้อนรับสู่\nPrime Sneakers Store",
+            "ชีวิตที่ใช่  รองเท้าที่ชอบ\nกับ Prime",
+            "ชีวิตที่ใช่  รองเท้าที่ชอบ\nค่าส่ง 150 บาท ทุกคู่",
+            "เหนือระดับ ทุกเสต็ป\nBy Prime Sneakers"
+        ];
 
+        let index = 0;
 
-                </div><!--/.owl-carousel-->
-            </div><!--/.clients-area-->
-        </div><!--/.container-->
-    </section><!--/brand-->
-    <!--brand end -->
-
-    <style>
-        /* ตั้งค่า container ของวีดีโอ */
-        .video-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
+        function updatePromo() {
+            document.getElementById("promo-text").textContent = promos[index];
+            index = (index + 1) % promos.length;
         }
 
-        /* วีดีโอขยายเต็มพื้นที่ */
-        .video-background {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            /* ให้ลิงก์ครอบวิดีโอทั้งหมด */
-        }
-    </style>
+        setInterval(updatePromo, 5000); // เปลี่ยนข้อความทุก 3 วินาที
+        updatePromo(); // แสดงข้อความแรกทันที
+    </script>
+    <div class="billboard">
+        <img src="myfile\runm.png" alt="Banner Image">
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
-
-        <img src="assets/font/fonts.png" alt="font">
+        <h5 style="font-size: 100px; font-weight:bold;">รองเท้าที่ใช่ สำหรับผู้ชาย</h5> <br>
         <!-- ปุ่มดูข้อมูล -->
-        <a href="upload3.php" class="btn">ดูข้อมูล</a>
-
-
+        <br>
+        <a href="upload3.php?category=Men" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
     </section>
-    <!--brand strat -->
-    <section id="brand" class="brand">
-        <div class="container">
-            <div class="brand-area">
-                <div class="owl-carousel owl-theme brand-item">
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/nike.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/adidas.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/puma.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
-                    <div class="item">
-                        <a href="#">
-                            <img src="assets/brand/nbb.png" alt="brand-image" />
-                        </a>
-                    </div><!--/.item-->
 
 
-                </div><!--/.owl-carousel-->
-            </div><!--/.clients-area-->
-        </div><!--/.container-->
-    </section><!--/brand-->
-    <!--brand end -->
-    <div class="container">
-        <h2>สินค้าล่าสุด</h2>
-        <div class="products">
-            <div class="product">
-                <img src="assets/cont/1.jpg" alt="Lifestyle Running Vomero">
-                <p>Lifestyle Running Vomero</p>
-            </div>
-            <div class="product">
-                <img src="assets/cont/2.png" alt="United Pack">
-                <p>United Pack</p>
-            </div>
-            <div class="product">
-                <img src="assets/cont/3.png" alt="Air Force 1 สำหรับเด็ก">
-                <p>Air Force 1 สำหรับเด็ก</p>
-            </div>
-        </div>
-    </div>
-    <h1>เลือกซื้อตามสินค้าไอคอน</h1>
-    <div id="root"></div>
+    <!DOCTYPE html>
+    <html lang="th">
 
-    <script type="text/babel">
-        function ShoeSlider() {
-            const shoes = [
-                { name: "Nike AF 1", image: "myfile/af1png.png" },
-                { name: "Nike PANDA", image: "myfile/pandapng.png" },
-                { name: "Jordan", image: "myfile/Air Jordan 1 Low.png" },
-                
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>รายการโปรดของคุณ</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
 
-            ];
-            const [index, setIndex] = React.useState(0);
+    <body>
+        <?php
+        include("include.php"); // เชื่อมต่อฐานข้อมูล
 
-            const prevSlide = () => setIndex((prev) => (prev === 0 ? shoes.length - 1 : prev - 1));
-            const nextSlide = () => setIndex((prev) => (prev === shoes.length - 1 ? 0 : prev + 1));
+        $query = "SELECT ID, Name, FilesName FROM product ORDER BY Gender LIMIT 10";
+        $result = mysqli_query($conn, $query);
+        ?>
 
-            return (
-                <div>
-                    <div className="slider">
-                        <button onClick={prevSlide}>⬅</button>
-                        {shoes.map((shoe, i) => (
-                            <div key={i} className={`shoe ${i === index ? "active" : ""}`}>
-                                <img src={shoe.image} alt={shoe.name} width="200" />
-                                <p>{shoe.name}</p>
+        <div class="container mt-5 card_contain">
+            <h2 class="text-start">สินค้าล่าสุด สำหรับผู้ชาย</h2>
+            <div class="row flex-nowrap overflow-auto" style="white-space: nowrap;">
+                <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a href="#" onclick="sendToSearch('<?= htmlspecialchars($row['Name']); ?>'); return false;" class="text-decoration-none text-dark">
+                            <div class="card h-100 border-0">
+                                <img src="myfile/<?= htmlspecialchars($row['FilesName']); ?>" class="card-img-top" alt="<?= htmlspecialchars($row['Name']); ?>" style="background-color:#FAFAFA;">
+                                <div class="card-body text-start">
+                                    <h5 class="card-title" style="font-size:large;"><?= htmlspecialchars($row['Name']); ?></h5>
+                                </div>
                             </div>
-                        ))}
-                        <button onClick={nextSlide}>➡</button>
+                        </a>
                     </div>
-                </div>
-            );
-        }
-
-        ReactDOM.createRoot(document.getElementById("root")).render(<ShoeSlider />);
-    </script>
-    <div class="container">
-        <h2>สินค้าล่าสุด</h2>
-        <div class="products">
-            <div class="product">
-                <img src="assets/cont/1.jpg" alt="Lifestyle Running Vomero">
-                <p>Lifestyle Running Vomero</p>
-            </div>
-            <div class="product">
-                <img src="assets/cont/2.png" alt="United Pack">
-                <p>United Pack</p>
-            </div>
-            <div class="product">
-                <img src="assets/cont/3.png" alt="Air Force 1 สำหรับเด็ก">
-                <p>Air Force 1 สำหรับเด็ก</p>
+                <?php } ?>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <h2>สินค้าล่าสุด</h2>
-        <div class="products">
-            <div class="product">
-                <img src="assets/cont/1.jpg" alt="Lifestyle Running Vomero">
-                <p>Lifestyle Running Vomero</p>
-            </div>
-            <div class="product">
-                <img src="assets/cont/2.png" alt="United Pack">
-                <p>United Pack</p>
-            </div>
-            <div class="product">
-                <img src="assets/cont/3.png" alt="Air Force 1 สำหรับเด็ก">
-                <p>Air Force 1 สำหรับเด็ก</p>
-            </div>
-        </div>
-    </div>
 
+        <script>
+            function sendToSearch(productName) {
+                window.location.href = `upload3.php?filter=${encodeURIComponent(productName)}`;
+            }
+        </script>
 
-    <!-- Shoe Carousel -->
-    <!--
-    <section class="carousel-section">
-        <h2>Lorem</h2>
-        <div class="carousel">
-            <div class="carousel-item">
-                <img src="assets/af1png.png" alt="Nike Pegasus">
-                <p>PEGASUS</p>
-                <p>ราคาพิเศษ: ฿3,500</p>
+        <!-- Hero Section -->
+        <div class="container mt-5" style="background-color: #f4f4f4; height: 800px;;">MEN</div>
+        <section class="hero">
+            <h5 style="font-size: 100px; font-weight:bold;">ชีวิตที่ใช่ <br> รองเท้าที่ชอบ Prime</h5> <br>
+            <!-- ปุ่มดูข้อมูล -->
+            <a href="upload3.php?category=Men" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
+        </section>
 
-            </div>
-            <div class="carousel-item">
-                <img src="assets/pandapng.png" alt="Nike Pegasus">
-                <p>PEGASUS</p>
-                <p>ราคาพิเศษ: ฿3,500</p>
+        <?php
+        include("include.php"); // เชื่อมต่อฐานข้อมูล
 
+        $query = "SELECT ID, Name, FilesName FROM product ORDER BY Gender LIMIT 10";
+        $result2 = mysqli_query($conn, $query);
+        ?>
 
-            </div>
-            <div class="carousel-item">
-                <img src="assets/af1png.png" alt="Nike Pegasus">
-                <p>PEGASUS</p>
-                <p>ราคาพิเศษ: ฿3,500</p>
-
-            </div>
-            <div class="carousel-item">
-                <img src="assets/pandapng.png" alt="Nike Pegasus">
-                <p>PEGASUS</p>
-                <p>ราคาพิเศษ: ฿3,500</p>
-
-            </div>
-
-        </div>
-    </section>
-    -->
-
-
-
-
-
-
-
-
-    <!-- Sports Carousel -->
-    <!--<section class="carousel-section">
-        <h2>Lorem</h2>
-        <div class="carousel">
-            <div class="carousel-item">
-                <img src="assets/af1png.png" alt="Football">
-                <p>Football</p>
-            </div>
-            <div class="carousel-item">
-                <img src="assets/af1png.png" alt="Football">
-                <p>Football</p>
-            </div>
-            <div class="carousel-item">
-                <img src="assets/af1png.png" alt="Football">
-                <p>Football</p>
-            </div>
-            <div class="carousel-item">
-                <img src="assets/af1png.png" alt="Football">
-                <p>Football</p>
-
+        <div class="container mt-5 card_contain">
+            <h2 class="text-start">สินค้ายอดนิยม สำหรับผู้ชาย</h2>
+            <div class="row flex-nowrap overflow-auto" style="white-space: nowrap;">
+                <?php while ($row = mysqli_fetch_assoc($result2)) { ?>
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <a href="#" onclick="sendToSearch('<?= htmlspecialchars($row['Name']); ?>'); return false;" class="text-decoration-none text-dark">
+                            <div class="card h-100 border-0">
+                                <img src="myfile/<?= htmlspecialchars($row['FilesName']); ?>" class="card-img-top" alt="<?= htmlspecialchars($row['Name']); ?>" style="background-color:#FAFAFA;">
+                                <div class="card-body text-start">
+                                    <h5 class="card-title" style="font-size:large;"><?= htmlspecialchars($row['Name']); ?></h5>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <?php } ?>
             </div>
         </div>
-    </section>
-    -->
 
-    <!--brand end -->
-    <!-- Include all js compiled plugins (below), or include individual files as needed -->
+        <script>
+            function sendToSearch(productName) {
+                window.location.href = `upload3.php?filter=${encodeURIComponent(productName)}`;
+            }
+        </script>
 
-    <script src="assets/js/jquery.js"></script>
+    </body>
 
-    <!--modernizr.min.js-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-
-    <!--bootstrap.min.js-->
-    <script src="assets/js/bootstrap.min.js"></script>
-
-    <!-- bootsnav js -->
-    <script src="assets/js/bootsnav.js"></script>
-
-    <!--owl.carousel.js-->
-    <script src="assets/js/owl.carousel.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-
-    <!--Custom JS-->
-    <script src="assets/js/custom.js"></script>
-
-
-
-
-
-
-
-
+    </html>
     <!-- Footer -->
     <?php
-renderFooter();
-?>
+    renderFooter();
+    ?>
 
 
 </body>

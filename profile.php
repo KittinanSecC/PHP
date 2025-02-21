@@ -4,20 +4,20 @@ include("include.php");
 include("structure.php");
 
 // ตรวจสอบว่าผู้ใช้เข้าสู่ระบบหรือไม่
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['user_id'])) {
     die("You must be logged in to view this page.");
 }
 
-$loggedInEmail = $_SESSION['email'];
+$loggedIn = $_SESSION['user_id'];
 // ตรวจสอบการเชื่อมต่อ
 if ($conn->connect_error) {
     die("Failed to connect to DB: " . $conn->connect_error);
 }
 
 // ดึงข้อมูลของผู้ใช้ที่เข้าสู่ระบบ
-$sql = "SELECT * FROM users WHERE email = ?";
+$sql = "SELECT * FROM users WHERE user_id = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $loggedInEmail);
+$stmt->bind_param("s", $loggedIn);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
@@ -38,18 +38,16 @@ $user = $result->fetch_assoc();
 
     <title>หน้าโพรไฟล์</title>
     <style>
-        body {
-            background-color: #fff;
-        }
-
         .row {
             width: 100%;
 
         }
 
-        .profile-container {
+        .profile_container {
+            flex: 1;
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            box-shadow: #ccc;
             gap: 20px;
         }
 
@@ -60,7 +58,6 @@ $user = $result->fetch_assoc();
             text-align: left;
 
         }
-
 
         .proinfo {
             margin-bottom: 0.5rem;
@@ -134,6 +131,57 @@ $user = $result->fetch_assoc();
             padding-right: 20px;
             border-radius: 20px;
         }
+
+        /* Adjust the custom card size */
+        .custom-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 200px;
+            /* Reduce card width */
+            margin: auto;
+            /* จัดให้อยู่ตรงกลาง */
+            /* Add margin between cards */
+        }
+
+        /* Adjust the image size within the card */
+        .card-img-top {
+            object-fit: cover;
+            height: 300px;
+            /* Reduce image height */
+            width: 100%;
+            /* Keep image width to 100% */
+        }
+        /* Make card title font smaller */
+        .card-title {
+            min-height: 50px;
+            /* กำหนดความสูงขั้นต่ำให้ชื่อสินค้าเท่ากัน */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: start;
+        }
+
+        /* Adjust the price font size */
+        .card-price {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Adjust the button size */
+        .custom-btn {
+            font-size: 14px;
+            /* Smaller button text */
+            padding: 8px 15px;
+            /* Smaller padding */
+        }
+
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 
@@ -151,7 +199,7 @@ $user = $result->fetch_assoc();
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
-    <div class="container">
+    <div class="container profile_container">
 
         <div class="profile-title">โปรไฟล์</div>
         <div class="proinfo">โปรไฟล์ Prime คือสิ่งที่ใช้แทนตัวคุณในการสั่งซื้อสินค้า ของเว็บ Prime</div>
@@ -163,20 +211,63 @@ $user = $result->fetch_assoc();
                 // Check if profile image is set and not empty, else use default default
                 $profileImage = empty($user['profile_img']) ? 'default.png' : $user['profile_img'];
                 ?>
-                <img src="myfile/<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
+                <img src="myfile/<?php echo htmlspecialchars($profileImage); ?>" alt="Profile Image" style="width: 100%; height: 100%; object-fit:cover; border-radius: 50%; border: 2px solid #ccc;">
             </div>
 
 
             <!-- Profile Details Column -->
             <div class="profile-details" style="flex: 1;">
                 <h3><?= htmlspecialchars($user['firstName']) . " " . htmlspecialchars($user['lastName']) ?></h3>
-                <p>username@<?= htmlspecialchars($user['username']) ?></p>
+                <p>username :@<?= htmlspecialchars($user['username']) ?></p>
                 <p>Email: <?= htmlspecialchars($user['email']) ?></p>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-dark btn-sm margin2 butt1" data-bs-toggle="modal" data-bs-target="#editModal">
                     แก้ไขประวัติ
                 </button>
+                <a href="successshow.php"><button type="button" class="btn btn-dark btn-sm margin2 butt1">
+                        ประวัติการสั่งซื้อ
+                    </button></a>
+                <?php
+                if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == 0)
+                    echo '<a href="upload1.php"><button type="button" class="btn btn-dark btn-sm margin2 butt1">
+                        เพิ่มสินค้า
+                    </button></a>'
+                ?>
+
             </div>
+        </div>
+        <style></style>
+        <div class="profile-title">รายการโปรดของคุณ</div>
+        <div class="row flex-column overflow-auto mb-1" style="max-height: 500px;">
+            <?php
+            $sql = "SELECT p.ID, p.Name, p.Price, p.FilesName, p.Gender
+            FROM favorites f
+            JOIN product p ON f.product_id = p.ID
+            WHERE f.user_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $loggedIn);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="col-lg-4 col-md-5 mb-3 col-sm-6">';
+                    echo '<a href="product-detail.php?id=' . $row["ID"] . '" class="text-decoration-none text-dark">';
+                    echo '<div class="card h-100" style="border: 0px; border-radius:0px;">';
+                    echo '<img src="myfile/' . htmlspecialchars($row["FilesName"]) . '" style="background-color:#FAFAFA;" class="card-img-top" alt="' . htmlspecialchars($row["Name"]) . '">';
+                    echo '<div class="card-body text-start">';
+                    echo '<h5 class="card-title" style="font-size:small;">' . htmlspecialchars($row["Name"]) . '</h5>';
+                    echo '<p class="card-text" style="font-size:small;">' . ($row["Gender"] == "Men" ? "รองเท้าผู้ชาย" : "รองเท้าผู้หญิง") . '</p>';
+                    echo '<p class="card-text" style="font-size:small;">฿' . number_format($row["Price"]) . '</p>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</a>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p class="text-center text-muted">ยังไม่มีรายการโปรด</p>';
+            }
+            ?>
         </div>
 
 
@@ -197,9 +288,9 @@ $user = $result->fetch_assoc();
                                 <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
 
                                 <div class="mb-3 text-center">
-                                    <div class="profile-image-container" >
-                                        <label for="profile_img"style="background-color: #333; border:1px solid grey;  border-radius:50%;">
-                                            <img class="profile-info clickable" id="profileImage" src="<?= 'myfile/' . $user['profile_img'] ?>" alt="Profile Picture" style="max-width: 150px; max-height: 150px;">
+                                    <div class="profile-image-container">
+                                        <label for="profile_img" style="background-color: #333; border:1px solid grey;  border-radius:50%; ">
+                                            <img class="profile-info clickable" id="profileImage" src="<?= 'myfile/' . $user['profile_img'] ?>" alt="Profile Picture" style="max-width: 150px; max-height: 150px; object-fit:cover;">
                                         </label>
                                     </div>
                                     <input type="file" name="profile_img" id="profile_img" onchange="previewImage(event)" style="display: none;">
@@ -234,7 +325,6 @@ $user = $result->fetch_assoc();
             </div>
         </div>
 
-
         <script>
             function previewImage(event) {
                 const file = event.target.files[0];
@@ -254,16 +344,13 @@ $user = $result->fetch_assoc();
         </script>
         <!-- Bootstrap JS (necessary for modal functionality) -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</div>
-</div>
+    </div>
+    </div>
 
-<!-- Empty space (for example) -->
-<div class="profile-container" style="height: 500px;"></div>
 
-<?php
-renderFooter();
-?>
+    <?php
+    renderFooter();
+    ?>
 
 </body>
 

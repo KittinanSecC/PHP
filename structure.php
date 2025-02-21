@@ -1,7 +1,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
 <?php
 function renderHeader($conn)
 {
@@ -13,26 +12,21 @@ function renderHeader($conn)
 
     // Top Bar
     echo '<div class="top-bar">';
-    
 
-    // เช็คว่าผู้ใช้ล็อกอินหรือยัง
-    if (isset($_SESSION['email'])) {
-        echo '<a href="cart.php">ตะกร้าสินค้า</a>'; // แสดงตะกร้าเฉพาะผู้ใช้ที่ล็อกอินแล้ว
+    // เช็คว่าผู้ใช้ล็อกอินหรือยังโดยใช้ user_id
+    if (isset($_SESSION['user_id'])) {
     }
+    echo '<a href="aboutus.php">เกี่ยวกับเรา</a>';
+    echo '<a href="policy.php">นโยบาย</a>';
 
-    echo '<a href="success.php">คำสั่งซื้อ</a>';
-    echo '<a href="#">เข้าร่วมกับเรา</a>';
-
-    if (isset($_SESSION['email'])) {
-        $email = $_SESSION['email'];
-        $query = mysqli_query($conn, "SELECT firstName, lastName FROM users WHERE email='$email'");
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+        $query = mysqli_query($conn, "SELECT firstName, lastName FROM users WHERE user_id='$user_id'");
         $row = mysqli_fetch_assoc($query);
         echo '<span>สวัสดี คุณ ' . $row['firstName'] . '</span>';
         echo '<span class="separator" style="margin: 0 8px; color: #666; font-weight: normal;">|</span>';
-        echo '<a href="logout.php" class="logout-btn">ล็อกเอาท์</a>';
-        echo '<a href="profile.php" class="cart-icon">
-                <i class="fa fa-user"></i>
-            </a>';
+        echo '<a href="logout.php" class="logout-btn">ออกจากระบบ</a>';
+        echo '<a href="profile.php" class="cart-icon"><i class="fa fa-user"></i></a>';
     } else {
         echo '<a href="login.php" class="signin-btn">เข้าสู่ระบบ</a>';
     }
@@ -50,25 +44,25 @@ function renderHeader($conn)
     echo '<li><a href="main.php">หน้าแรก</a></li>';
     echo '<li><a href="upload3.php">สินค้า</a></li>';
     echo '<li><a href="Men.php">ผู้ชาย</a></li>';
-    echo '<li><a href="#">ผู้หญิง</a></li>';
-    if (isset($_SESSION['email'])) {
+    echo '<li><a href="Women.php">ผู้หญิง</a></li>';
+    if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == 0) {
         echo '<li><a href="upload1.php">เพิ่มสินค้า</a></li>';
     }
-    echo '</ul>';
-    echo '</nav>';
 
-    echo '<div class="search-bar">';
-    echo '<button id="search-button"><i class="fa fa-search"></i></button>';
-    echo '<input type="text" placeholder="ค้นหา" id="search-input">';
-    echo '</div>';
+    echo '</ul>';
+
+    echo '</nav>';
+    // เช็คว่าผู้ใช้ล็อกอินหรือยังโดยใช้ user_id
+    if (isset($_SESSION['user_id'])) {
+
+        echo '</div>';
+    }
+    echo '<div class="cart_section">';
+    echo '<a href="cart.php" class="btn1" style="margin-left:1rem;margin-right:1.4rem;"><i class="fa-solid fa-bag-shopping"></i></i></a>'; // Cart icon
+
 
     echo '</header>';
 }
-
-
-
-
-
 
 function renderFooter()
 {
@@ -106,16 +100,16 @@ function renderFooter()
                     <ul class="footer-links">
                         <li><a href="upload3.php">สินค้า</a></li>
                         <li><a href="Men.php">ผู้ชาย</a></li>
-                        <li><a href="#">ผู้หญิง</a></li>
+                        <li><a href="Women.php">ผู้หญิง</a></li>
                     </ul>
                 </div>
 
                 <div class="col-xs-6 col-md-3">
                     <h6>ลิงก์ด่วน</h6>
                     <ul class="footer-links">
-                        <li><a href="#">เกี่ยวกับเรา</a></li>
-                        <li><a href="#">ติดต่อเรา</a></li>
-                        <li><a href="#">นโยบายความเป็นส่วนตัว</a></li>
+                        <li><a href="aboutus.php">เกี่ยวกับเรา</a></li>
+                        <li><a href="contac.php">ติดต่อเรา</a></li>
+                        <li><a href="policy.php">นโยบายความเป็นส่วนตัว</a></li>
                     </ul>
                 </div>
             </div>
@@ -127,7 +121,7 @@ function renderFooter()
             <div class="row">
                  <div class="col-md-12 text-center">
                      <p class="copyright-text">ลิขสิทธิ์ &copy; 2025 สงวนลิขสิทธิ์โดย
-                    <a href="#">Prime</a>.
+                    <a href="main.php">Prime</a>.
                 </p>
             </div>
         </div>
@@ -136,3 +130,21 @@ function renderFooter()
 </footer>';
 }
 ?>
+<style>
+    ::-webkit-scrollbar {
+        height: 5px;
+        width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #fff;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #000, #000);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
