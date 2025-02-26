@@ -1,0 +1,187 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.top-bar {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: bold;
+    padding-right: 40px;
+}
+
+.top-bar a {
+    text-decoration: none;
+    color: black;
+    padding: 0 2px;
+    font-weight: bold;
+}
+
+.top-bar a:not(:last-child)::after {
+    content: '|';
+    /* เพิ่มเส้นคั่น */
+    margin-left: 6px;
+    margin-right: 6px;
+    /* เพิ่มระยะห่างระหว่างเส้นกับข้อความ */
+    color: black;
+    /* สีของเส้น */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+}
+
+.cart_section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cart_section a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    margin-top: 5px;
+    border-radius: 50%;
+    background-color: white;
+    border: none;
+    /* เอาขอบออก */
+    box-shadow: none;
+    /* เอาเงาออก */
+}
+
+header .logo img {
+    height: 60px;
+    width: auto;
+    flex-shrink: 0;
+    /* ป้องกันโลโก้หดตัว */
+    padding-left: 35px;
+}
+
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+header nav ul li a:hover {
+    text-decoration: none;
+    /* ปิด underline เดิม */
+    border-bottom: 3px solid rgb(0, 0, 0);
+    /* เพิ่มเส้นแทน underline */
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 150px;
+    width: 100%;
+    border-radius: 30px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 1px 1px;
+    transition: all 0.3s ease-in-out;
+
+    margin-left: 10px;
+
+}
+
+.search-bar input {
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    font-size: 16px;
+    color: #333;
+    transition: 0.3s ease;
+    background-color: #f5f5f5;
+    font-weight: bold;
+    padding-left: 1px;
+}
+
+.search-bar input:focus {
+    border: 1px solid #646464;
+    /* Change border color when focused */
+    box-shadow: 0 0 5px rgba(107, 107, 107, 0.5);
+    /* Add glow effect */
+}
+
+.search-bar button {
+    background-color: #f5f5f5;
+    border: none;
+    padding: 5px 8px;
+    margin-right: 5px;
+    border-radius: 50%;
+    color: #646464;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+    background-color: #b0b4b0;
+}
+
+.search-bar button i {
+    font-size: 18px;
+}
+
+.brand-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.no-caret::after {
+    display: none;
+}
+
+.btn1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 0, 0);
+    height: 40px;
+    /* ปรับขนาดสูงขึ้น */
+    width: 40px;
+    /* ปรับขนาดกว้างขึ้น */
+    border-radius: 75%;
+    background-color: white;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* เพิ่มเงาให้ดูมีมิติ */
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.btn1:hover {
+    background-color: #f0f0f0;
+    /* เปลี่ยนสีตอน hover */
+    transform: scale(1.1);
+    /* ขยายขึ้นเล็กน้อยเมื่อ hover */
+}

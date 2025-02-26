@@ -1,0 +1,113 @@
+/* รีเซ็ตสไตล์เบื้องต้น */
+.cart-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: left;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.cart-items {
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item img {
+    width: 100px;
+    border-radius: 5px;
+}
+
+.product-details {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.product-details h3 {
+    font-size: 18px;
+    margin: 0 0 5px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.qty-btn {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: top;
+    line-height: 30px;
+    border-radius: 5px;
+}
+.qty-btn:hover {
+    background-color: #ddd;
+}
+
+.cart-actions .delete-btn {
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #000000;
+}
+
+.cart-summary {
+    text-align: right;
+}
+
+.cart-summary h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.cart-summary p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.checkout-btn, .paypal-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.checkout-btn {
+    background: black;
+    color: white;
+}
+
+.paypal-btn {
+    background: #f0f0f0;
+    color: #0070ba;
+    font-weight: bold;
+}
+
