@@ -240,9 +240,9 @@ $user = $result->fetch_assoc();
         <div class="profile-title">รายการโปรดของคุณ</div>
         <div class="row flex-column overflow-auto mb-1" style="max-height: 500px;">
             <?php
-            $sql = "SELECT p.ID, p.Name, p.Price, p.FilesName, p.Gender
+            $sql = "SELECT p.product_id, p.Name, p.Price, p.FilesName, p.Gender
             FROM favorites f
-            JOIN product p ON f.product_id = p.ID
+            JOIN product p ON f.product_id = p.product_id
             WHERE f.user_id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $loggedIn);
@@ -252,7 +252,7 @@ $user = $result->fetch_assoc();
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="col-lg-4 col-md-5 mb-3 col-sm-6">';
-                    echo '<a href="product-detail.php?id=' . $row["ID"] . '" class="text-decoration-none text-dark">';
+                    echo '<a href="product-detail.php?id=' . $row["product_id"] . '" class="text-decoration-none text-dark">';
                     echo '<div class="card h-100" style="border: 0px; border-radius:0px;">';
                     echo '<img src="myfile/' . htmlspecialchars($row["FilesName"]) . '" style="background-color:#FAFAFA;" class="card-img-top" alt="' . htmlspecialchars($row["Name"]) . '">';
                     echo '<div class="card-body text-start">';

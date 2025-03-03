@@ -19,7 +19,7 @@ if ($quantity < 1) {
 // ดึงข้อมูลสินค้า
 $sql = "SELECT c.price, c.user_id, p.Price AS latest_price 
         FROM cart c 
-        JOIN product p ON c.product_id = p.ID 
+        JOIN product p ON c.product_id = p.product_id 
         WHERE c.cart_id = ?";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {

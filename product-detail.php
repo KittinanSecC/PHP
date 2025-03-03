@@ -4,13 +4,13 @@ include("include.php"); // เชื่อมต่อฐานข้อมู�
 include("structure.php");
 
 // ตรวจสอบค่า ID ที่รับมา
-if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {
     die("<h2>❌ ไม่พบสินค้า</h2>");
 }
-$id = intval($_GET['id']);
+$id = intval($_GET['product_id']);
 
 // ดึงข้อมูลสินค้าจากฐานข้อมูล
-$sql = "SELECT Name, Price, Gender, FilesName, FilesName2, FilesName3, FilesName4, Description FROM product WHERE ID = ?";
+$sql = "SELECT Name, Price, Gender, FilesName, FilesName2, FilesName3, FilesName4, Description FROM product WHERE product_id = ?";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     die("เกิดข้อผิดพลาดใน SQL: " . $conn->error);
@@ -23,13 +23,24 @@ if (!$product) {
     die("<h2>❌ ไม่พบสินค้า</h2>");
 }
 
+// ดึงข้อมูลไซส์จากฐานข้อมูล
+$sql_sizes = "SELECT Size, Stock FROM product_sizes WHERE ProductID = ? ORDER BY Size ASC";
+$stmt_sizes = $conn->prepare($sql_sizes);
+$stmt_sizes->bind_param("i", $id);
+$stmt_sizes->execute();
+$result_sizes = $stmt_sizes->get_result();
+$sizes = [];
+
+while ($row = $result_sizes->fetch_assoc()) {
+    $sizes[] = $row;
+}
+
 
 // จัดการรูปภาพ
 $images = array_filter([$product['FilesName'], $product['FilesName2'], $product['FilesName3'], $product['FilesName4']]);
 
 // แปลงค่าเพศเป็นข้อความภาษาไทย
 $gender_text = ($product['Gender'] === 'Men') ? "รองเท้าผู้ชาย" : "รองเท้าผู้หญิง";
-
 
 // เพิ่มฟังก์ชันการจัดการรายการโปรด
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
@@ -48,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
         $message = "\u2714\ufe0f เพิ่มสินค้าในรายการโปรดเรียบร้อย!";
     }
 
-    echo "<script>alert('$message'); window.location.href='product.php?id=$id';</script>";
+    echo "<script>alert('$message'); window.location.href='product.php?product_id=$id';</script>";
     exit;
 }
 ?>
@@ -100,8 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
         }
 
         .description {
-
-
             border-radius: 10px;
             margin-top: 20px;
             font-size: 1rem;
@@ -141,26 +150,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
 
         .size-btn {
             border-color: black !important;
-            /* กรอบดำ */
             background-color: white !important;
-            /* พื้นหลังขาว */
             color: black !important;
-            /* ตัวหนังสือดำ */
-
             transition: 0.3s;
         }
 
         .size-btn:hover {
             background-color: white !important;
-            /* ไม่มีสีเทาเมื่อ hover */
-
         }
 
         .size-btn.active {
             background-color: black !important;
-            /* เมื่อกด เปลี่ยนเป็นดำ */
             color: white !important;
-            /* ตัวหนังสือขาว */
         }
 
         .favorite {
@@ -192,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
         $is_favorite = $result->num_rows > 0;
     }
     ?>
-
 </head>
 <?php
 renderHeader($conn);
@@ -223,14 +223,33 @@ renderHeader($conn);
                 <p class="text-muted"> <?= $gender_text ?> </p>
                 <h3 class="text-danger">฿<?= number_format($product['Price']) ?></h3>
 
+                <?php
+                // จัดเรียงไซส์จากค่าน้อยไปมาก (รองรับไซส์ที่เป็นตัวเลขและตัวอักษร)
+                usort($sizes, function ($a, $b) {
+                    return strnatcmp($a['Size'], $b['Size']);
+                });
+                ?>
                 <div class="sizes my-3">
                     <label>เลือกไซส์:</label>
                     <div class="d-flex flex-wrap">
-                        <?php foreach (["US 6", "US 6.5", "US 7", "US 7.5", "US 8", "US 8.5", "US 9", "US 9.5", "US 10", "US 10.5", "US 11", "US 12"] as $size) : ?>
-                            <button class="btn size-btn m-1" data-size="<?= $size ?>"> <?= $size ?> </button>
+                        <?php foreach ($sizes as $size) : ?>
+                            <button class="btn size-btn m-1 <?= ($size['Stock'] == 0) ? 'disabled' : '' ?>"
+                                data-size="<?= htmlspecialchars($size['Size']) ?>">
+                                <?= htmlspecialchars($size['Size']) ?>
+                            </button>
                         <?php endforeach; ?>
                     </div>
                 </div>
+                <script>
+                    document.querySelectorAll('.size-btn:not(.disabled)').forEach(button => {
+                        button.addEventListener('click', function() {
+                            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+                            this.classList.add('active');
+                            document.getElementById('selected_size').value = this.getAttribute('data-size');
+                        });
+                    });
+                </script>
+
 
                 <form action="add_to_cart.php" method="POST">
                     <input type="hidden" name="product_id" value="<?= $id ?>">
@@ -241,6 +260,7 @@ renderHeader($conn);
 
                     <button type="submit" class="btn cart-btn w-100 my-2 btn-dark">เพิ่มในตะกร้า</button>
                 </form>
+
                 <script>
                     document.querySelectorAll('.size-btn').forEach(button => {
                         button.addEventListener('click', function() {
@@ -250,6 +270,7 @@ renderHeader($conn);
                         });
                     });
                 </script>
+
                 <div class="favorite-button">
                     <button id="favorite-btn" data-product-id="<?= $id ?>" class="favorite <?= $is_favorite ? 'active' : '' ?>">
                         <i id="heart-icon" class="<?= $is_favorite ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"
@@ -257,7 +278,6 @@ renderHeader($conn);
                         </i>
                         <span id="favorite-text"><?= $is_favorite ? 'ลบจากรายการโปรด' : 'เพิ่มในรายการโปรด' ?></span>
                     </button>
-
                 </div>
 
                 <div class="description">
@@ -265,90 +285,53 @@ renderHeader($conn);
                     <p><?= nl2br(htmlspecialchars($product['Description'])) ?></p>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <?php renderFooter() ?>
 
-            <?php renderFooter() ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const favoriteBtn = document.getElementById("favorite-btn");
+            const heartIcon = document.getElementById("heart-icon");
+            const favoriteText = document.getElementById("favorite-text");
 
-            <script>
-                document.querySelectorAll('.thumb-img').forEach(img => {
-                    img.addEventListener('click', function() {
-                        document.getElementById('mainImage').src = this.src;
-                        document.querySelectorAll('.thumb-img').forEach(img => img.classList.remove('active'));
-                        this.classList.add('active');
+            favoriteBtn.addEventListener("click", async function() {
+                const productId = this.getAttribute("data-product-id");
+
+                try {
+                    const response = await fetch("toggle_favorite.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                        body: `product_id=${encodeURIComponent(productId)}`,
                     });
-                });
-            </script>
-            <script>
-                document.querySelectorAll('.size-btn').forEach(button => {
-                    button.addEventListener('click', function() {
-                        // ลบ active class จากปุ่มอื่น ๆ
-                        document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
 
-                        // เพิ่ม active class ให้ปุ่มที่เลือก
-                        this.classList.add('active');
+                    const data = await response.text();
+                    console.log(data);
 
-                        // อัปเดตค่า input hidden
-                        document.getElementById('selected_size').value = this.getAttribute('data-size');
-                    });
-                });
-
-                // ตรวจสอบก่อนส่งฟอร์ม ว่าได้เลือกไซส์แล้วหรือไม่
-                document.querySelector("form").addEventListener("submit", function(event) {
-                    let selectedSize = document.getElementById("selected_size").value;
-                    if (!selectedSize) {
-                        alert("❌ โปรดเลือกไซส์ก่อนเพิ่มลงตะกร้า!");
-                        event.preventDefault(); // ป้องกันการ submit
+                    if (data.includes("✅")) {
+                        heartIcon.classList.remove("fa-regular", "fa-heart");
+                        heartIcon.classList.add("fa", "fa-heart");
+                        heartIcon.style.color = "red";
+                        favoriteText.textContent = "ลบจากรายการโปรด";
+                        favoriteBtn.classList.add("active");
+                    } else if (data.includes("❌")) {
+                        heartIcon.classList.remove("fa", "fa-heart");
+                        heartIcon.classList.add("fa-regular", "fa-heart");
+                        heartIcon.style.color = "gray";
+                        favoriteText.textContent = "เพิ่มในรายการโปรด";
+                        favoriteBtn.classList.remove("active");
                     }
-                });
-            </script>
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const favoriteBtn = document.getElementById("favorite-btn");
-                    const heartIcon = document.getElementById("heart-icon");
-                    const favoriteText = document.getElementById("favorite-text");
 
-                    favoriteBtn.addEventListener("click", async function() {
-                        const productId = this.getAttribute("data-product-id");
-
-                        try {
-                            const response = await fetch("toggle_favorite.php", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded",
-                                },
-                                body: `product_id=${encodeURIComponent(productId)}`,
-                            });
-
-                            const data = await response.text();
-                            console.log(data);
-
-                            if (data.includes("✅")) {
-                                // เพิ่มในรายการโปรด -> ไอคอนสีแดง
-                                heartIcon.classList.remove("fa-regular", "fa-heart");
-                                heartIcon.classList.add("fa", "fa-heart");
-                                heartIcon.style.color = "red";
-                                favoriteText.textContent = "ลบจากรายการโปรด";
-                                favoriteBtn.classList.add("active");
-                            } else if (data.includes("❌")) {
-                                // ลบออกจากรายการโปรด -> ไอคอนเส้นขอบสีเทา
-                                heartIcon.classList.remove("fa", "fa-heart");
-                                heartIcon.classList.add("fa-regular", "fa-heart");
-                                heartIcon.style.color = "gray";
-                                favoriteText.textContent = "เพิ่มในรายการโปรด";
-                                favoriteBtn.classList.remove("active");
-                            }
-
-                        } catch (error) {
-                            console.error("Error:", error);
-                            alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
-                        }
-                    });
-                });
-            </script>
-
-
-
-
+                } catch (error) {
+                    console.error("Error:", error);
+                    alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

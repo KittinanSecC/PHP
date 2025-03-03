@@ -96,7 +96,7 @@ include("structure.php");
         <?php
         include("include.php"); // เชื่อมต่อฐานข้อมูล
 
-        $query = "SELECT ID, Name, FilesName FROM product ORDER BY ID DESC LIMIT 10";
+        $query = "SELECT product_id, Name, FilesName FROM product ORDER BY product_id DESC LIMIT 10";
         $result = mysqli_query($conn, $query);
         ?>
 
@@ -137,7 +137,7 @@ include("structure.php");
         <?php
         include("include.php"); // เชื่อมต่อฐานข้อมูล
 
-        $query = "SELECT ID, Name, FilesName FROM product ORDER BY ID ASC LIMIT 10";
+        $query = "SELECT product_id, Name, FilesName FROM product ORDER BY product_id ASC LIMIT 10";
         $result2 = mysqli_query($conn, $query);
         ?>
 

@@ -14,7 +14,7 @@ if (!$product_id) {
 }
 
 // ✅ ตรวจสอบว่า product_id มีอยู่จริง
-$check_sql = "SELECT COUNT(*) FROM product WHERE ID = ?";
+$check_sql = "SELECT COUNT(*) FROM product WHERE product_id = ?";
 $check_stmt = $conn->prepare($check_sql);
 $check_stmt->bind_param("i", $product_id);
 $check_stmt->execute();

@@ -118,7 +118,7 @@ include("structure.php");
                     while ($objResult = mysqli_fetch_array($objQuery)) {
                     ?>
                         <div class="col-md-4 mb-3 col-sm-6">
-                            <a href="product-detail.php?id=<?= $objResult['ID']; ?>" class="text-decoration-none text-dark">
+                            <a href="product-detail.php?product_id=<?= $objResult['product_id']; ?>" class="text-decoration-none text-dark">
                                 <div class="card h-100" style="border: 0px; border-radius:0px;">
                                     <img src="myfile/<?= htmlspecialchars($objResult["FilesName"]); ?>" style="background-color:#FAFAFA;" class="card-img-top" alt="<?= htmlspecialchars($objResult["Name"]); ?>">
                                     <div class="card-body text-start">

@@ -17,7 +17,7 @@ $user_id = $_SESSION['user_id'];
 $sql = "SELECT c.cart_id, p.Name, c.size, c.quantity, c.price, c.image, 
                (c.quantity * c.price) AS total_price 
         FROM cart c
-        JOIN product p ON c.product_id = p.ID 
+        JOIN product p ON c.product_id = p.product_id 
         WHERE c.user_id = ?";
 
 $stmt = $conn->prepare($sql);

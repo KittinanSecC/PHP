@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$product_id = filter_input(INPUT_POST, 'ID', FILTER_VALIDATE_INT);
+$product_id = filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT);
 
 if (!$product_id) {
     exit("❌ รหัสสินค้าไม่ถูกต้อง");

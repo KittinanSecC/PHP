@@ -36,7 +36,7 @@ if (!$order) {
 // Retrieve the order items
 $item_sql = "SELECT oi.*, p.Name AS product_name, p.FilesName AS product_image
              FROM order_items oi
-             JOIN product p ON oi.product_id = p.ID
+             JOIN product p ON oi.product_id = p.product_id
              WHERE oi.order_id = ?";
 $item_stmt = $conn->prepare($item_sql);
 

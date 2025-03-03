@@ -4,11 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="login.css">
   <title>เข้าสู่ระบบของ Prime Sneakers Store TH</title>
-    <link href="assets/logo/Prime2.png" rel="icon">
+  <link href="assets/logo/Prime2.png" rel="icon">
 </head>
 
 <body>
@@ -29,11 +29,11 @@
       </div>
       <div class="input-group">
         <input type="password" name="password" id="signupPassword" placeholder="พาสเวิร์ด*" required>
-        
+
       </div>
       <div class="input-group">
         <input type="password" id="confirmPassword" placeholder="ยืนยันพาสเวิร์ด*" required>
-        
+
       </div>
       <p id="passwordError" style="color: red; display: none;">รหัสผ่านไม่ตรงกัน</p>
 
@@ -55,13 +55,13 @@
 
   <?php session_start(); ?>
   <div class="container" id="signIn">
-    <div class="container_img "><img src="assets\logo\Prime2.png"  alt="โลโก้เว็บไซต์" width="150px"></div>
+    <div class="container_img "><img src="assets\logo\Prime2.png" alt="โลโก้เว็บไซต์" width="150px"></div>
     <h1 class="form-title">ยินดีต้อนรับ</h1>
     <h4 class="form-text" style="font-weight: 100;">เข้าสู่ระบบ Prime</h4>
 
     <form method="post" action="register.php">
       <div class="input-group">
-        <input type="email" name="email" id="loginEmail" placeholder="อีเมล" required>
+        <input type="text" name="loginInput" id="loginInput" placeholder="อีเมล หรือ ชื่อผู้ใช้" required>
       </div>
       <div class="input-group">
         <input type="password" name="password" id="loginPassword" placeholder="พาสเวิร์ด" required>

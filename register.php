@@ -35,21 +35,20 @@ if (isset($_POST['signUp'])) {
 }
 
 if (isset($_POST['signIn'])) {
-    $email = $_POST['email'];
+    $loginInput = $_POST['loginInput']; 
     $password = $_POST['password'];
     $password = md5($password);
 
-    $sql = "SELECT user_id FROM users WHERE email='$email' AND password='$password'";
+    $sql = "SELECT user_id FROM users WHERE (email='$loginInput' OR username='$loginInput') AND password='$password'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        session_start();
         $row = $result->fetch_assoc();
-        $_SESSION['user_id'] = $row['user_id']; // เก็บ user_id แทนอีเมล
+        $_SESSION['user_id'] = $row['user_id'];
         header("Location: main.php");
         exit();
     } else {
-        $_SESSION['error'] = "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+        $_SESSION['error'] = "อีเมล/ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง";
         header("Location: login.php");
         exit();
     }

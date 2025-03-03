@@ -31,10 +31,10 @@ $sql = "SELECT cart.*, product.Name AS pro_name, product.FilesName AS pro_image
         FROM cart
         JOIN product ON cart.product_id = product.ID
         WHERE cart.user_id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$stmt2 = $conn->prepare($sql);
+$stmt2->bind_param("i", $user_id);
+$stmt2->execute();
+$result = $stmt2->get_result();
 $cart_items = [];
 while ($row = $result->fetch_assoc()) {
     $cart_items[] = $row;

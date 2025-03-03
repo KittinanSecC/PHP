@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 products.forEach(product => {
                     let productCard = `
                         <div class="product-card">
-                            <a href="product-detail.php?id=${product.ID}">
+                            <a href="product-detail.php?id=${product.product_id}">
                                 <img src="myfile/${product.FilesName}" alt="${product.Name}" class="product-image">
                                 <h3>${product.Name}</h3>
                                 <p>฿${product.Price}</p>

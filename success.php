@@ -7,7 +7,7 @@ include("structure.php");
 $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
 if ($order_id == 0) {
-    die("<h2 class='text-center text-red-500 font-bold text-xl'>❌ ไม่พบคำสั่งซื้อ (Invalid Order ID)</h2>");
+    die("<h2 class='text-center text-red-500 font-bold text-xl'>❌ ไม่พบคำสั่งซื้อ (Invalid Order product_id)</h2>");
 }
 
 // ดึงข้อมูลคำสั่งซื้อ
@@ -25,7 +25,7 @@ if (!$order) {
 // ดึงข้อมูลรายการสินค้าในออเดอร์
 $item_sql = "SELECT oi.*, p.Name AS product_name, p.FilesName AS product_image
              FROM order_items oi
-             JOIN product p ON oi.product_id = p.ID
+             JOIN product p ON oi.product_id = p.product_id
              WHERE oi.order_id = ?";
 $item_stmt = $conn->prepare($item_sql);
 $item_stmt->bind_param("i", $order_id);
