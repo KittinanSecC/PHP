@@ -214,3 +214,29 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
 }
+
+/* Fade-in effect */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Apply transition to specific sections */
+.transition-element {
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.transition-element.visible {
+    opacity: 1;
+}

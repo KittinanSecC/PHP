@@ -50,7 +50,7 @@ include("structure.php");
     </div>
     <script>
         const promos = [
-            "ยินดีต้อนรับสู่\nPrime Sneakers Store",
+            "สินค้าสำหรับผู้หญิง\nPrime Sneakers Store",
             "ชีวิตที่ใช่  รองเท้าที่ชอบ\nกับ Prime",
             "ชีวิตที่ใช่  รองเท้าที่ชอบ\nค่าส่ง 150 บาท ทุกคู่",
             "เหนือระดับ ทุกเสต็ป\nBy Prime Sneakers"
@@ -67,10 +67,11 @@ include("structure.php");
         updatePromo(); // แสดงข้อความแรกทันที
     </script>
     <!-- billbord -->
-    <div class="billboard">
-        <img src="assets/banner/banner-women.jpg" alt="Banner Image" style="object-position: 0 20%;">
-    </div>
-
+    <a href="product.php?filter=&category=Women">
+        <div class="billboard">
+            <img src="assets/banner/banner-women2.jpg" alt="Banner Image" style="object-position: 10 20%;">
+        </div>
+    </a>
 
 
     <!-- Hero Section -->
@@ -78,7 +79,7 @@ include("structure.php");
         <h5 style="font-size: 100px; font-weight:bold;">รองเท้าที่ใช่ สำหรับผู้หญิง</h5> <br>
         <!-- ปุ่มดูข้อมูล -->
         <br>
-        <a href="upload3.php?category=Men" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
+        <a href="product.php?category=Men" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
     </section>
 
 
@@ -120,24 +121,26 @@ include("structure.php");
 
         <script>
             function sendToSearch(productName) {
-                window.location.href = `upload3.php?filter=${encodeURIComponent(productName)}`;
+                window.location.href = `product.php?filter=${encodeURIComponent(productName)}`;
             }
         </script>
 
         <!-- Hero Section -->
-        <div class="container" style="width:100%; height: 80vh; overflow:hidden; position:relative;">
-            <img src="assets/banner/banner-women2.jpg" alt="banner2" style="width: 100%; height: 180%; object-fit: cover; position: absolute; bottom: 0;">
-        </div>
+        <a href="product.php?filter=&category=Women">
+            <div class="container" style="width:100%; height: 80vh; overflow:hidden; position:relative;">
+                <img src="assets/banner/banner-women.jpg" alt="banner2" style="width: 100%; height: 100%; object-fit: contain; position: absolute; bottom: 0;">
+            </div>
+        </a>
         <section class="hero">
             <h5 style="font-size: 100px; font-weight:bold;">ชีวิตที่ใช่ <br> รองเท้าที่ชอบ Prime</h5> <br>
             <!-- ปุ่มดูข้อมูล -->
-            <a href="upload3.php?category=Women" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
+            <a href="product.php?category=Women" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
         </section>
 
         <?php
         include("include.php"); // เชื่อมต่อฐานข้อมูล
 
-        $query = "SELECT product_id, Name, FilesName FROM product ORDER BY product_id ASC LIMIT 10";
+        $query = "SELECT product_id, Name, FilesName FROM product WHERE Gender = 'Women' ORDER BY view_count DESC LIMIT 10";
         $result2 = mysqli_query($conn, $query);
         ?>
 
@@ -161,7 +164,7 @@ include("structure.php");
 
         <script>
             function sendToSearch(productName) {
-                window.location.href = `upload3.php?filter=${encodeURIComponent(productName)}`;
+                window.location.href = `product.php?filter=${encodeURIComponent(productName)}`;
             }
         </script>
 

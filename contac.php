@@ -8,6 +8,8 @@
     <!--Meta Keywords and Description-->
     <meta name="keywords" content="">
     <meta name="description" content="">
+    <title>ช่องทางติตต่อ Prime Sneakers Store TH</title>
+    <link href="assets/logo/Prime2.png" rel="icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap">
 
@@ -104,7 +106,7 @@
                 <div class="col-2 icon-block icon-top wow fadeInUp" data-wow-delay="0.3s">
                     <div class="icon-block-description">
                         <h4><i class="fa fa-home" aria-hidden="true"></i> ที่อยู่</h4>
-                        <p>39 หมู่ที่ 1 ตำบลคลองหก อำเภอคลองหลวง จังหวัดปทุมธานี 12120</p>
+                        <p>999/99999  Klong6 </p>
                     </div>
                 </div>
                 <!--End of Icon Block-->
@@ -114,7 +116,7 @@
                     <div class="icon-block-description">
                         <h4><i class="fa fa-phone" aria-hidden="true"></i> โทรศัพท์</h4>
                         <p>Tel : 099-999-9999</p>
-                        <p>Tel : 093-919-9159</p>
+                        <p>Tel : 084-999-9999</p>
                     </div>
                 </div>
                 <!--End of Icon Block-->

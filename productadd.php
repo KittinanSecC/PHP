@@ -94,7 +94,7 @@ include("structure.php");
     renderHeader($conn)
     ?>
     <form name="form1" method="post" action="upload2.php" enctype="multipart/form-data">
-        <h2>เพิ่มสินค้า</h2>
+        <h2>เพิ่มสินค้าใหม่</h2>
 
         <label for="txtName">ชื่อ :</label>
         <input type="text" name="txtName" id="txtName" required><br>

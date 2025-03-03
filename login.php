@@ -4,14 +4,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="login.css">
-  <title>เข้าสู่ระบบของ Prime Sneakers Store TH</title>
+  <title>เข้าสู่ระบบ Prime Sneakers Store TH</title>
   <link href="assets/logo/Prime2.png" rel="icon">
+
 </head>
 
 <body>
+  <style>
+    /* กำหนดขนาดเต็มจอให้กับรูป */
+    .full-screen-image {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      /* ทำให้รูปภาพอยู่ด้านหลังเนื้อหาของหน้า */
+    }
+
+    .full-screen-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* เพื่อให้รูปครอบคลุมทั้งพื้นที่โดยไม่บิดเบือน */
+    }
+  </style>
+
+  <body>
+    <div class="full-screen-image">
+      <img src="assets/banner/login_bg3.webp" alt="Full Screen Image" class="full-screen-img">
+    </div>
+    <!-- เนื้อหาที่เหลือของคุณ -->
+  </body>
+
   <div class="container" id="signup" style="display:none">
     <h1 class="form-title">สมัครสมาชิก</h1>
     <form method="post" action="register.php" onsubmit="return validateSignup()">
@@ -22,17 +50,17 @@
         <input type="text" name="lName" id="lName" placeholder="นามสกุล*" required>
       </div>
       <div class="input-group">
-        <input type="text" name="username" id="username" placeholder="Username*" required>
+        <input type="text" name="username" id="username" placeholder="ชื่อผู้ใช้*" required>
       </div>
       <div class="input-group">
         <input type="email" name="email" id="signupEmail" placeholder="อีเมล*" required>
       </div>
       <div class="input-group">
-        <input type="password" name="password" id="signupPassword" placeholder="พาสเวิร์ด*" required>
+        <input type="password" name="password" id="signupPassword" placeholder="รหัสผ่าน*" required>
 
       </div>
       <div class="input-group">
-        <input type="password" id="confirmPassword" placeholder="ยืนยันพาสเวิร์ด*" required>
+        <input type="password" id="confirmPassword" placeholder="ยืนยันรหัสผ่าน*" required>
 
       </div>
       <p id="passwordError" style="color: red; display: none;">รหัสผ่านไม่ตรงกัน</p>
@@ -61,10 +89,10 @@
 
     <form method="post" action="register.php">
       <div class="input-group">
-        <input type="text" name="loginInput" id="loginInput" placeholder="อีเมล หรือ ชื่อผู้ใช้" required>
+        <input type="text" name="loginInput" id="loginInput" placeholder="อีเมลหรือชื่อผู้ใช้" required>
       </div>
       <div class="input-group">
-        <input type="password" name="password" id="loginPassword" placeholder="พาสเวิร์ด" required>
+        <input type="password" name="password" id="loginPassword" placeholder="รหัสผ่าน" required>
         <i class="fa-solid fa-eye-slash togglePassword" data-target="loginPassword"></i>
       </div>
       <!-- Show error message if login fails -->

@@ -70,16 +70,15 @@ $orders = $order_result->fetch_all(MYSQLI_ASSOC);
         table th,
         table td {
             padding: 12px;
-            text-align: left;
+            text-align: center;
             border-bottom: 1px solid #ddd;
             vertical-align: middle;
         }
 
-        /* Style for table headers */
-        table th {
+        table #thhead {
+            text-align: center;
             background-color: rgb(0, 0, 0);
             color: white;
-            text-align: center;
         }
 
         /* Hover effect for rows */
@@ -92,7 +91,7 @@ $orders = $order_result->fetch_all(MYSQLI_ASSOC);
             display: inline-block;
             background-color: #3498db;
             color: white;
-            padding: 10px 20px;
+            padding: 10px 10px;
             text-decoration: none;
             border-radius: 5px;
             text-align: center;
@@ -120,13 +119,33 @@ $orders = $order_result->fetch_all(MYSQLI_ASSOC);
         h1 {
             color: #2c3e50;
             text-align: center;
-            margin-bottom: 20px;
         }
 
         .no-orders {
             text-align: center;
             font-size: 18px;
             color: #e74c3c;
+        }
+
+        /* Style for the container holding both dropdown and button */
+        .status-container {
+            display: flex;
+            align-items: center;
+            /* Align items vertically in the center */
+            gap: 10px;
+            /* Space between the dropdown and button */
+        }
+
+        /* Make sure both the dropdown and button have similar styling */
+        .status-container .btn {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        /* Adjust width of the select for uniformity */
+        .status-container select {
+            width: 150px;
+            /* Optional: You can adjust the width as needed */
         }
     </style>
 </head>
@@ -153,17 +172,22 @@ $orders = $order_result->fetch_all(MYSQLI_ASSOC);
             <thead>
                 <tr>
                     <?php if ($user_id == 0): ?>
-                        <th>หมายเลขผู้ใช้</th> <!-- Add this column if user_id is 0 -->
-                        <th>ชื่อผู้ใช้</th>
-                        <th>Username</th>
-                        <th>อีเมล</th>
+                        <th id="thhead">หมายเลขผู้ใช้</th> <!-- Add this column if user_id is 0 -->
+                        <th id="thhead">ชื่อผู้ใช้</th>
+                        <th id="thhead">Username</th>
+                        <th id="thhead">อีเมล</th>
                     <?php endif; ?>
-                    <th>หมายเลขคำสั่งซื้อ</th>
-                    <th>วันที่สั่งซื้อ</th>
-                    <th>ยอดรวม</th>
-                    <th>สถานะคำสั่งซื้อ</th>
-                    <th></th>
-                    <th></th>
+                    <th id="thhead">หมายเลขคำสั่งซื้อ</th>
+                    <th id="thhead">วันที่สั่งซื้อ</th>
+                    <th id="thhead">ยอดรวม</th>
+                    <th id="thhead">สถานะคำสั่งซื้อ</th>
+                    <?php if ($user_id == 0): ?>
+                        <th id="thhead"></th>
+                    <?php endif; ?>
+                    <th id="thhead"></th>
+                    <?php if ($user_id != 0): ?>
+                        <th id="thhead"></th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -178,11 +202,36 @@ $orders = $order_result->fetch_all(MYSQLI_ASSOC);
                         <td>#<?php echo $order['order_id']; ?></td>
                         <td><?php echo $order['created_at']; ?></td>
                         <td><?php echo number_format($order['total_price'], 2); ?> ฿</td>
-                        <td><?php echo htmlspecialchars($order['order_status']); ?></td>
-                        <td><a href="order_details.php?order_id=<?php echo $order['order_id']; ?>" class="btn">ดูรายละเอียด</a></td>
-                        <td><a href="" class="btn btn-dark">update status</a></td>
+                        <td>
+                            <?php
+                            if ($order['order_status'] == 'pending') {
+                                echo 'กำลังดำเนินการ';
+                            } elseif ($order['order_status'] == 'completed') {
+                                echo 'คำสั่งซื้อสำเร็จ';
+                            }
+                            ?>
+                        </td>
+                        <td>
+                            <?php if ($user_id == 0): ?> <!-- Admin sees the dropdown -->
+                                <form action="update_status.php" method="POST">
+                                    <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                                    <div class="status-container">
+                                        <select name="order_status" class="btn btn-dark">
+                                            <option value="" selected disabled>สถานะ</option>
+                                            <option value="pending" <?php echo ($order['order_status'] == 'pending') ? 'selected' : ''; ?>>กำลังดำเนินการ</option>
+                                            <option value="completed" <?php echo ($order['order_status'] == 'completed') ? 'selected' : ''; ?>>คำสั่งซื้อสำเร็จ</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-danger">อัพเดต</button>
+                                    </div>
+                                </form>
+                            <?php else: ?> <!-- Non-admin sees status text only -->
+
+                            <?php endif; ?>
+                        </td>
+                        <td><a href="order_details.php?order_id=<?php echo $order['order_id']; ?>" class="btn btn-light border">รายละเอียด</a></td>
                     </tr>
                 <?php endforeach; ?>
+
             </tbody>
 
         </table>

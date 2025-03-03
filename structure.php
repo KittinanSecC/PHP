@@ -42,11 +42,13 @@ function renderHeader($conn)
     echo '<nav>';
     echo '<ul>';
     echo '<li><a href="main.php">หน้าแรก</a></li>';
-    echo '<li><a href="upload3.php">สินค้า</a></li>';
+    echo '<li><a href="product.php">สินค้า</a></li>';
     echo '<li><a href="Men.php">ผู้ชาย</a></li>';
     echo '<li><a href="Women.php">ผู้หญิง</a></li>';
     if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == 0) {
-        echo '<li><a href="upload1.php">เพิ่มสินค้า</a></li>';
+        echo '<li><a href="productadd.php">เพิ่มสินค้า</a></li>';
+        echo '<li><a href="Stocking.php">เพิ่มสต็อก</a></li>';
+        
     }
 
     echo '</ul>';
@@ -79,7 +81,7 @@ function renderFooter()
     </head>
     <style>
         * {
-            font-family: \'Kanit\', \'serif\';
+            font-family: \'Kanit\';
         }
     </style>
     <!-- Footer -->
@@ -98,7 +100,7 @@ function renderFooter()
                 <div class="col-xs-6 col-md-3">
                     <h6>หมวดหมู่</h6>
                     <ul class="footer-links">
-                        <li><a href="upload3.php">สินค้า</a></li>
+                        <li><a href="product.php">สินค้า</a></li>
                         <li><a href="Men.php">ผู้ชาย</a></li>
                         <li><a href="Women.php">ผู้หญิง</a></li>
                     </ul>
@@ -133,7 +135,7 @@ function renderFooter()
 <style>
     ::-webkit-scrollbar {
         height: 5px;
-        width: 5px;
+        width: 10px;
     }
 
     ::-webkit-scrollbar-track {

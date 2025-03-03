@@ -1,0 +1,152 @@
+        .row {
+            width: 100%;
+
+        }
+
+        .profile_container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            box-shadow: #ccc;
+            gap: 20px;
+
+        }
+
+        .profile-title {
+            font-size: xx-large;
+            font-weight: bolder;
+            margin-bottom: 0.5rem;
+            text-align: left;
+
+        }
+
+        .proinfo {
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .profile-image-container {
+            display: flex;
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+        }
+
+        .clickable {
+            cursor: pointer;
+            /* Make the image clickable */
+        }
+
+        .text-muted.small {
+            /* Style the hint text */
+            font-size: smaller;
+            /* Make it smaller */
+            margin-top: 5px;
+            /* Add a little space above */
+        }
+
+        .profile-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+            width: 150px;
+            border-radius: 50%;
+
+        }
+
+        .profile-info img {
+            width: 80px;
+            height: 80px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+
+        .profile-details {
+            text-align: left;
+        }
+
+        .profile-details h3 {
+            font-weight: bold;
+        }
+
+        .btn-container {
+            display: flex;
+            align-self: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-label {
+            text-align: left;
+        }
+
+        .margin2 {
+            margin-bottom: 4rem;
+
+        }
+
+        .m1 {
+            margin-left: 0.3rem;
+
+        }
+
+        .butt1 {
+            background-color: black;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 20px;
+        }
+
+        /* Adjust the custom card size */
+        .custom-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 200px;
+            /* Reduce card width */
+            margin: auto;
+            /* จัดให้อยู่ตรงกลาง */
+            /* Add margin between cards */
+        }
+
+        /* Adjust the image size within the card */
+        .card-img-top {
+            object-fit: cover;
+            height: 300px;
+            /* Reduce image height */
+            width: 100%;
+            /* Keep image width to 100% */
+        }
+
+        /* Make card title font smaller */
+        .card-title {
+            min-height: 50px;
+            /* กำหนดความสูงขั้นต่ำให้ชื่อสินค้าเท่ากัน */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: start;
+        }
+
+        /* Adjust the price font size */
+        .card-price {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Adjust the button size */
+        .custom-btn {
+            font-size: 14px;
+            /* Smaller button text */
+            padding: 8px 15px;
+            /* Smaller padding */
+        }
+
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }

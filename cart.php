@@ -13,11 +13,11 @@ if (!isset($_SESSION['user_id'])) {
 // ใช้ user_id จาก session โดยตรง
 $user_id = $_SESSION['user_id'];
 
-// ดึงข้อมูลสินค้าจากตะกร้า
 $sql = "SELECT c.cart_id, p.Name, c.size, c.quantity, c.price, c.image, 
-               (c.quantity * c.price) AS total_price 
+               (c.quantity * c.price) AS total_price, ps.Stock 
         FROM cart c
         JOIN product p ON c.product_id = p.product_id 
+        JOIN product_sizes ps ON ps.ProductID = p.product_id AND ps.Size = c.size
         WHERE c.user_id = ?";
 
 $stmt = $conn->prepare($sql);
@@ -125,17 +125,18 @@ $total = 0;
                         <?php $total += $row['total_price']; ?>
                     <?php endwhile; ?>
                 </div>
-
                 <div class="cart-summary">
+
                     <h3>สรุป</h3>
                     <p>ยอดรวมย่อย: ฿<span class="subtotal"><?= number_format($total, 2) ?></span></p>
                     <p>ค่าธรรมเนียมและค่าจัดส่ง: ฿150.00</p>
                     <hr>
                     <p><strong>ยอดรวม: ฿<span class="total"><?= number_format($total + 150, 2) ?></span></strong></p>
                     <form action="checkout.php" method="POST">
+                        <div class="error-message" style="color: red; font-weight: bold;"></div>
                         <button type="submit" class="btn cart-btn w-100 my-2 btn-dark" style="height:40px">สั่งซื้อเลย</button>
                     </form>
-                    <a href=upload3.php><button class="btn wishlist-btn w-100 btn-light" style="border: 1px solid;">กลับหน้าสินค้า</button></a>
+                    <a href=product.php><button class="btn wishlist-btn w-100 btn-light" style="border: 1px solid;">กลับหน้าสินค้า</button></a>
                 </div>
                 <script src="cart.js"></script>
             <?php else: ?>

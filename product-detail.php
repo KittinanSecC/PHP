@@ -1,8 +1,24 @@
 <?php
 session_start();
 include("include.php"); // เชื่อมต่อฐานข้อมูล
-include("structure.php");
 
+// ตรวจสอบค่า product_id ที่รับมา
+if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {
+    die("<h2>❌ ไม่พบสินค้า</h2>");
+}
+$id = intval($_GET['product_id']);
+
+// อัปเดตจำนวนการเข้าชม (view_count) +1
+$update_view_sql = "UPDATE product SET view_count = view_count + 1 WHERE product_id = ?";
+$stmt_update = $conn->prepare($update_view_sql);
+$stmt_update->bind_param("i", $id);
+$stmt_update->execute();
+$stmt_update->close();
+
+$view_count = isset($product['view_count']) ? $product['view_count'] : 0;
+
+
+include("structure.php");
 // ตรวจสอบค่า ID ที่รับมา
 if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {
     die("<h2>❌ ไม่พบสินค้า</h2>");
@@ -10,7 +26,7 @@ if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {
 $id = intval($_GET['product_id']);
 
 // ดึงข้อมูลสินค้าจากฐานข้อมูล
-$sql = "SELECT Name, Price, Gender, FilesName, FilesName2, FilesName3, FilesName4, Description FROM product WHERE product_id = ?";
+$sql = "SELECT Name, Price, Gender, FilesName, FilesName2, FilesName3, FilesName4, Description, view_count FROM product WHERE product_id = ?";
 $stmt = $conn->prepare($sql);
 if (!$stmt) {
     die("เกิดข้อผิดพลาดใน SQL: " . $conn->error);
@@ -59,7 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
         $message = "\u2714\ufe0f เพิ่มสินค้าในรายการโปรดเรียบร้อย!";
     }
 
-    echo "<script>alert('$message'); window.location.href='product.php?product_id=$id';</script>";
+    echo "<script>
+    alert('$message');
+    window.location.href = 'product.php?product_id=$id';
+</script>";
     exit;
 }
 ?>
@@ -117,42 +136,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
             color: black;
         }
 
-        .cart-btn {
-            background-color: black;
-            color: white;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            padding: 10px;
-            border: none;
-        }
-
-        .cart-btn:hover {
-            background-color: #000000;
-        }
-
-        .wishlist-btn {
-            background-color: white;
-            color: black;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            padding: 10px;
-            border: 2px solid #ddd;
-        }
-
-        .wishlist-btn:hover {
-            border-color: black;
-        }
-
-        .cart-btn i,
-        .wishlist-btn i {
-            margin-right: 5px;
+        /* Center buttons vertically and wrap them */
+        .sizes .d-flex {
+            justify-content: flex-start;
+            flex-wrap: wrap;
         }
 
         .size-btn {
             border-color: black !important;
-            background-color: white !important;
+            background-color: white;
             color: black !important;
             transition: 0.3s;
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            border: 2px solid #000 !important;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: calc(25% - 10px);
+            /* Ensures 4 buttons per row */
+            max-width: 120px;
+            /* Maximum width to prevent stretching */
+            margin-bottom: 10px;
+            /* Space between rows */
         }
 
         .size-btn:hover {
@@ -162,6 +170,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
         .size-btn.active {
             background-color: black !important;
             color: white !important;
+            border: 2px solid #fff;
+            /* Change border when active */
+        }
+
+
+        .size-btn.disabled {
+            pointer-events: none;
+            border: 1px solid #ccc;
+            background-color: rgb(226, 226, 226) !important;
+            /* Light gray background for disabled */
+            color: #a9a9a9;
+            /* Darker gray text to make it look disabled */
+        }
+
+        .size-btn:not(.disabled):hover {
+            background-color: #0056b3;
+            color: white;
         }
 
         .favorite {
@@ -178,6 +203,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
 
         .favorite.active .fa-heart {
             color: red;
+        }
+
+        /* Style for the disabled size button */
+        .size-btn.disabled {
+            background-color: grey;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
     </style>
     <?php
@@ -197,6 +229,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['favorite'])) {
 <?php
 renderHeader($conn);
 ?>
+<script>
+    // Function to change the large image
+    function changeMainImage(thumbnail) {
+        // Get the source of the clicked thumbnail
+        var newSrc = thumbnail.src;
+
+        // Change the source of the large image
+        document.getElementById('mainImage').src = newSrc;
+
+        // Optionally, you can update the alt text of the large image
+        var altText = thumbnail.alt || thumbnail.title || thumbnail.getAttribute('data-title') || 'Product Image';
+        document.getElementById('mainImage').alt = altText;
+    }
+</script>
 
 <body>
     <div class="container mt-5">
@@ -209,9 +255,10 @@ renderHeader($conn);
                         </div>
                         <div class="thumb-gallery mt-2 d-flex">
                             <?php foreach ($images as $img) : ?>
-                                <img src="myfile/<?= htmlspecialchars($img) ?>" class="img-thumbnail mx-1 thumb-img" width="80">
+                                <img src="myfile/<?= htmlspecialchars($img) ?>" class="img-thumbnail mx-1 thumb-img" width="80" onclick="changeMainImage(this)">
                             <?php endforeach; ?>
                         </div>
+
                     <?php else : ?>
                         <p>ไม่มีภาพสินค้า</p>
                     <?php endif; ?>
@@ -230,26 +277,52 @@ renderHeader($conn);
                 });
                 ?>
                 <div class="sizes my-3">
-                    <label>เลือกไซส์:</label>
-                    <div class="d-flex flex-wrap">
+                    <label>เลือกขนาด:</label>
+                    <div class="d-flex flex-wrap justify-content-start">
                         <?php foreach ($sizes as $size) : ?>
                             <button class="btn size-btn m-1 <?= ($size['Stock'] == 0) ? 'disabled' : '' ?>"
-                                data-size="<?= htmlspecialchars($size['Size']) ?>">
+                                data-size="<?= htmlspecialchars($size['Size']) ?>"
+                                data-stock="<?= $size['Stock'] ?>">
                                 <?= htmlspecialchars($size['Size']) ?>
                             </button>
                         <?php endforeach; ?>
                     </div>
+                    <!-- เพิ่มแสดงจำนวนสินค้าคงเหลือ -->
+                    <div id="stock-info" style="margin-top: 10px; font-weight: bold;"></div>
                 </div>
+
                 <script>
+                    // เมื่อเลือกขนาด จะแสดงจำนวนสินค้าคงเหลือ
                     document.querySelectorAll('.size-btn:not(.disabled)').forEach(button => {
                         button.addEventListener('click', function() {
+                            // ลบ class active จากทุกปุ่ม
                             document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+                            // เพิ่ม class active ให้ปุ่มที่เลือก
                             this.classList.add('active');
+                            // อัปเดตข้อมูลขนาดที่เลือก
                             document.getElementById('selected_size').value = this.getAttribute('data-size');
+
+                            // แสดงข้อมูลจำนวนสินค้าคงเหลือ
+                            const stock = this.getAttribute('data-stock');
+                            const stockInfo = document.getElementById('stock-info');
+                            if (stock > 0) {
+                                stockInfo.textContent = "สินค้าคงเหลือ: " + stock + " ชิ้น";
+                                stockInfo.style.color = "grey";
+                            } else {
+                                stockInfo.textContent = "สินค้าหมด";
+                                stockInfo.style.color = "red";
+                            }
                         });
                     });
                 </script>
 
+                <?php
+
+                if (isset($_SESSION['error_message'])) {
+                    echo "<p style='color: red;'>" . $_SESSION['error_message'] . "</p>";
+                    unset($_SESSION['error_message']);  // Clear the message after displaying
+                }
+                ?>
 
                 <form action="add_to_cart.php" method="POST">
                     <input type="hidden" name="product_id" value="<?= $id ?>">
@@ -258,7 +331,7 @@ renderHeader($conn);
                     <input type="hidden" id="selected_size" name="product_size" value="">
                     <input type="hidden" name="product_image" value="myfile/<?= htmlspecialchars($product['FilesName']) ?>">
 
-                    <button type="submit" class="btn cart-btn w-100 my-2 btn-dark">เพิ่มในตะกร้า</button>
+                    <button type="submit" class="btn cart-btn w-100 my-2 btn-dark p-2">เพิ่มในตะกร้า</button>
                 </form>
 
                 <script>
@@ -271,14 +344,24 @@ renderHeader($conn);
                     });
                 </script>
 
-                <div class="favorite-button">
-                    <button id="favorite-btn" data-product-id="<?= $id ?>" class="favorite <?= $is_favorite ? 'active' : '' ?>">
-                        <i id="heart-icon" class="<?= $is_favorite ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"
-                            style="color: <?= $is_favorite ? 'red' : 'gray' ?>;">
-                        </i>
-                        <span id="favorite-text"><?= $is_favorite ? 'ลบจากรายการโปรด' : 'เพิ่มในรายการโปรด' ?></span>
-                    </button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="favorite-button">
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <button id="favorite-btn" data-product-id="<?= $id ?>" class="favorite <?= $is_favorite ? 'active' : '' ?>">
+                                <i id="heart-icon" class="<?= $is_favorite ? 'fa fa-heart' : 'fa-regular fa-heart' ?>"
+                                    style="color: <?= $is_favorite ? 'red' : 'gray' ?>;">
+                                </i>
+                                <span id="favorite-text"><?= $is_favorite ? 'ลบจากรายการโปรด' : 'เพิ่มในรายการโปรด' ?></span>
+                            </button>
+                        <?php else: ?>
+
+                        <?php endif; ?>
+                    </div>
+
+
+                    <p class="mb-0"><i class="fa-regular fa-eye"></i> จำนวนการเข้าชม: <?= number_format($product['view_count']) ?> ครั้ง</p>
                 </div>
+
 
                 <div class="description">
                     <h4>รายละเอียดสินค้า</h4>

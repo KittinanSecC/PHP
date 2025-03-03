@@ -15,15 +15,17 @@ include("structure.php");
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    
+
     <style>
         .center-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* ให้เต็มหน้าจอ */
+            height: 100vh;
+            /* ให้เต็มหน้าจอ */
             text-align: center;
-            flex-direction: column; /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+            flex-direction: column;
+            /* จัดให้อยู่กึ่งกลางแนวตั้ง */
         }
     </style>
 </head>
@@ -31,7 +33,7 @@ include("structure.php");
 <body>
     <?php
     renderHeader($conn);
-    
+
     // 1️⃣ เชื่อมต่อฐานข้อมูล
     $servername = "localhost";
     $username = "root";  // หรือที่ตั้งค่าไว้

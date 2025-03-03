@@ -124,7 +124,15 @@ include("structure.php");
                                     <div class="card-body text-start">
                                         <h5 class="card-title" style="font-size:small;"><?= htmlspecialchars($objResult["Name"]); ?></h5>
                                         <p class="card-text" style="font-size:small;"><?= $objResult["Gender"] == "Men" ? "รองเท้าผู้ชาย" : "รองเท้าผู้หญิง"; ?></p>
-                                        <p class="card-text" style="font-size:small;">฿<?= number_format($objResult["Price"]); ?></p>
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p class="card-text" style="font-size:small;">฿<?= number_format($objResult["Price"]); ?></p>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <p class="card-text" style="font-size:small;"><?= number_format($objResult["view_count"]); ?>  <i class="fa-regular fa-eye"></i></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </a>

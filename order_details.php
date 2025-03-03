@@ -196,7 +196,7 @@ $items = $item_result->fetch_all(MYSQLI_ASSOC);
                 <tr>
                     <td>
                         <img src="myfile/<?php echo $item['product_image']; ?>" width="50">
-                        <?php echo htmlspecialchars($item['product_name']); ?>
+                        <?php echo htmlspecialchars($item['product_name']); ?> <?php echo htmlspecialchars($item['size']); ?>
                     </td>
                     <td><?php echo $item['quantity']; ?></td>
                     <td><?php echo number_format($item['price'] * $item['quantity'], 2); ?> ฿</td>

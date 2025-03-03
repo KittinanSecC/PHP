@@ -80,7 +80,7 @@ include("structure.php");
     <body>
         <!-- billbord -->
         <section id="video-background" class="video-container">
-            <a href="upload3.php">
+            <a href="product.php">
                 <video autoplay loop muted playsinline class="video-background">
                     <source src="assets/video/nike.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -91,14 +91,14 @@ include("structure.php");
         <section class="hero">
             <h5>ความยิ่งใหญ่แบนกันไม่ได้<br>
                 <!-- ปุ่มดูข้อมูล -->
-                <a href="upload3.php" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
+                <a href="product.php" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
         </section>
         <!-- Use Bootstrap container and grid system -->
         <div class="container" style="margin-top:7rem;">
             <h2>สินค้ายอดนิยม</h2>
             <div class="row">
                 <div class="col-4 ">
-                    <a href="upload3.php?filter=Nike+Dunk+Low&category=&min_price=&max_price=" class="text_none">
+                    <a href="product.php?filter=Nike+Dunk+Low&category=&min_price=&max_price=" class="text_none">
                         <div class="product">
                             <video autoplay loop muted playsinline class="video-background img-fluid">
                                 <source src="assets/video/nike21.mp4" type="video/mp4">
@@ -108,7 +108,7 @@ include("structure.php");
                     </a>
                 </div>
                 <div class="col-4">
-                    <a href="upload3.php?filter=Air+Jordan&category=&min_price=&max_price=" class="text_none">
+                    <a href="product.php?filter=Air+Jordan&category=&min_price=&max_price=" class="text_none">
                         <div class="product">
                             <video autoplay loop muted playsinline class="video-background img-fluid">
                                 <source src="assets/video/nike22.mp4" type="video/mp4">
@@ -118,7 +118,7 @@ include("structure.php");
                     </a>
                 </div>
                 <div class="col-4">
-                    <a href="upload3.php?filter=Nike+SB&category=&min_price=&max_price=" class="text_none">
+                    <a href="product.php?filter=Nike+SB&category=&min_price=&max_price=" class="text_none">
                         <div class="product">
                             <video autoplay loop muted playsinline class="video-background img-fluid">
                                 <source src="assets/video/nike23.mp4" type="video/mp4">
@@ -160,19 +160,20 @@ include("structure.php");
 
         <script>
             function sendToSearch(productName) {
-                window.location.href = `upload3.php?filter=${encodeURIComponent(productName)}`;
+                window.location.href = `product.php?filter=${encodeURIComponent(productName)}`;
             }
         </script>
 
         <!-- Hero Section -->
-        <div class="container" style="width:100%; height: 80vh; overflow:hidden; position:relative;">
-            <img src="assets/banner/banner-main2.jpg" alt="banner2" style="width: 100%; height: 100%; object-fit: cover; position: absolute; bottom: 0;">
-        </div>
-
+        <a href="product.php">
+            <div class="container" style="width:100%; height: 80vh; overflow:hidden; position:relative;">
+                <img src="assets/banner/banner-main2.jpg" alt="banner2" style="width: 100%; height: 100%; object-fit: cover; position: absolute; bottom: 0;">
+            </div>
+        </a>
         <section class="hero">
             <h5>รองเท้าที่ใช่ Prime</h5> <br>
             <!-- ปุ่มดูข้อมูล -->
-            <a href="upload3.php" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
+            <a href="product.php" class="btn btn-dark" style="border-radius: 25px;">เลือกซื้อ</a>
         </section>
 
         <div class="container mt-5 card_contain">
@@ -180,17 +181,17 @@ include("structure.php");
             <div class="category mt-5 container">
                 <div class="row text-center">
                     <div class="col position-relative">
-                        <a href="upload3.php?category=Men" class="image-container">
+                        <a href="product.php?category=Men" class="image-container">
                             <img src="myfile/runm.png" alt="รองเท้าผู้ชาย" class="img-fluid">
                             <h5 class="text-on-image">รองเท้าผู้ชาย</h5>
-                            <a href="upload3.php?category=Men" class="btn btn-dark btn-lg text-button" style="border-radius: 25px;">เลือกซื้อ</a>
+                            <a href="product.php?category=Men" class="btn btn-dark btn-lg text-button" style="border-radius: 25px;">เลือกซื้อ</a>
                         </a>
                     </div>
                     <div class="col position-relative">
-                        <a href="upload3.php?category=Men" class="image-container">
+                        <a href="product.php?category=Men" class="image-container">
                             <img src="myfile/runf.jpg" alt="รองเท้าผู้ชาย" class="img-fluid">
                             <h5 class="text-on-image">รองเท้าผู้ชาย</h5>
-                            <a href="upload3.php?category=Men" class="btn btn-dark btn-lg text-button" style="border-radius: 25px;">เลือกซื้อ</a>
+                            <a href="product.php?category=Men" class="btn btn-dark btn-lg text-button" style="border-radius: 25px;">เลือกซื้อ</a>
                         </a>
                     </div>
                 </div>
@@ -202,7 +203,7 @@ include("structure.php");
         <?php
         include("include.php"); // เชื่อมต่อฐานข้อมูล
 
-        $query = "SELECT product_id, Name, FilesName FROM product ORDER BY product_id ASC LIMIT 10";
+        $query = "SELECT product_id, Name, FilesName FROM product ORDER BY view_count desc LIMIT 10";
         $result2 = mysqli_query($conn, $query);
         ?>
 
@@ -226,9 +227,19 @@ include("structure.php");
 
         <script>
             function sendToSearch(productName) {
-                window.location.href = `upload3.php?filter=${encodeURIComponent(productName)}`;
+                window.location.href = `product.php?filter=${encodeURIComponent(productName)}`;
             }
         </script>
+        <script>
+            // Wait for the page to load and then add the 'visible' class to trigger the transition
+            window.onload = function() {
+                const elements = document.querySelectorAll('.transition-element');
+                elements.forEach(element => {
+                    element.classList.add('visible');
+                });
+            }
+        </script>
+
 
     </body>
 

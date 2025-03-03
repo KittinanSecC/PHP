@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             document.querySelector(".cart-container").innerHTML = `
                                 <h2>ตะกร้าสินค้า</h2>
                                 <p class="empty-cart">ตะกร้าของคุณว่างเปล่า 🛒</p>
-                                <a href="upload3.php" class="btn btn-light w-100" style="border: 1px solid;">กลับหน้าสินค้า</a>
+                                <a href="product.php" class="btn btn-light w-100" style="border: 1px solid;">กลับหน้าสินค้า</a>
                             `;
                         }
                     } else {

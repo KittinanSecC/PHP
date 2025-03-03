@@ -8,50 +8,63 @@ if (!isset($_SESSION['user_id'])) {
     die("You must be logged in to view this page.");
 }
 
-$user_id = $_SESSION['user_id']; // ใช้ user_id จาก session
+$user_id = $_SESSION['user_id'];
 
 // ตรวจสอบการเชื่อมต่อกับฐานข้อมูล
 if ($conn->connect_error) {
     die("Failed to connect to DB: " . $conn->connect_error);
 }
 
-// ดึงข้อมูลของผู้ใช้ที่เข้าสู่ระบบ
-$sql = "SELECT * FROM users WHERE user_id = ?";
+// ดึงข้อมูลของผู้ใช้
+$sql = "SELECT * FROM users WHERE user_id = ? LIMIT 1";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
-
-if (!$user = $result->fetch_assoc()) {
+$user = $result->fetch_assoc();
+if (!$user) {
     die("User not found.");
 }
 
 // ดึงข้อมูลสินค้าจากตะกร้า
 $sql = "SELECT cart.*, product.Name AS pro_name, product.FilesName AS pro_image
         FROM cart
-        JOIN product ON cart.product_id = product.ID
+        JOIN product ON cart.product_id = product.product_id
         WHERE cart.user_id = ?";
 $stmt2 = $conn->prepare($sql);
 $stmt2->bind_param("i", $user_id);
 $stmt2->execute();
 $result = $stmt2->get_result();
-$cart_items = [];
-while ($row = $result->fetch_assoc()) {
-    $cart_items[] = $row;
+$cart_items = $result->fetch_all(MYSQLI_ASSOC);
+
+// ฟังก์ชั่นเช็คสต็อก
+function checkStock($product_id, $size, $quantity, $conn)
+{
+    $sql = "SELECT Stock FROM product_sizes WHERE ProductID = ? AND Size = ? LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("is", $product_id, $size);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $stock = $result->fetch_assoc()['Stock'];
+        return $stock >= $quantity; // ตรวจสอบสต็อก
+    }
+    return false;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['name']) && !empty($_POST['address']) && !empty($_POST['payment_method']) && isset($_POST['total_price'])) {
-        $name = $conn->real_escape_string($_POST['name']);
-        $address = $conn->real_escape_string($_POST['address']);
-        $payment_method = $conn->real_escape_string($_POST['payment_method']);
+        $name = htmlspecialchars($_POST['name']);
+        $address = htmlspecialchars($_POST['address']);
+        $payment_method = htmlspecialchars($_POST['payment_method']);
         $total_price = floatval($_POST['total_price']);
-
         $payment_proof_path = NULL;
-        if (!empty($_FILES['payment_proof']['name']) && ($payment_method === "พร้อมเพย์" || $payment_method === "โอนผ่านธนาคาร")) {
+
+        // Handle file upload if payment method requires proof
+        if (($payment_method === "พร้อมเพย์" || $payment_method === "โอนผ่านธนาคาร") && !empty($_FILES['payment_proof']['name'])) {
             $targetDir = "uploads/payment_proofs/";
             if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0777, true); // สร้างโฟลเดอร์ถ้ายังไม่มี
+                mkdir($targetDir, 0777, true); // Create directory if not exists
             }
             $fileName = basename($_FILES["payment_proof"]["name"]);
             $uniqueFileName = uniqid() . "_" . $fileName;
@@ -61,40 +74,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $allowedTypes = ["jpg", "jpeg", "png", "pdf"];
             if (in_array($fileType, $allowedTypes)) {
                 if (move_uploaded_file($_FILES["payment_proof"]["tmp_name"], $targetFilePath)) {
-                    $payment_proof_path = $targetFilePath;
+                    $payment_proof_path = $targetFilePath;  // Save the file path
                 } else {
                     die("Failed to upload payment proof.");
                 }
             } else {
-                die("Invalid file type. Allowed types: JPG, JPEG, PNG, PDF");
+                die("Invalid file type. Allowed types: JPG, JPEG, PNG, PDF.");
             }
         }
 
-        // บันทึกคำสั่งซื้อ
-        $order_sql = "INSERT INTO orders (user_id, total_price, shipping_address, payment_method, name, payment_proof)
-                      VALUES (?, ?, ?, ?, ?, ?)";
+        // กำหนดค่า order_status
+        $order_status = ($payment_method === "เก็บเงินปลายทาง") ? 'pending' : 'completed';
+
+        // Insert order into database
+        $order_sql = "INSERT INTO orders (user_id, total_price, shipping_address, payment_method, name, payment_proof, order_status)
+              VALUES (?, ?, ?, ?, ?, ?, ?)";
         $order_stmt = $conn->prepare($order_sql);
-        $order_stmt->bind_param("sdssss", $user_id, $total_price, $address, $payment_method, $name, $payment_proof_path);
+        $order_stmt->bind_param("sdsssss", $user_id, $total_price, $address, $payment_method, $name, $payment_proof_path, $order_status);
+
         if ($order_stmt->execute()) {
             $order_id = $conn->insert_id;
 
-            // ย้ายข้อมูลจาก cart ไป order_items
             $item_sql = "INSERT INTO order_items (order_id, product_id, quantity, price, size)
-                         VALUES (?, ?, ?, ?, ?)";
+                 VALUES (?, ?, ?, ?, ?)";
             $item_stmt = $conn->prepare($item_sql);
+
             foreach ($cart_items as $item) {
                 $size = $item['size'] ?? '';
                 $item_stmt->bind_param("iiids", $order_id, $item['product_id'], $item['quantity'], $item['price'], $size);
                 $item_stmt->execute();
+
+                // ตัดสต็อกเฉพาะเมื่อเป็นโอนผ่านธนาคาร
+                if ($payment_method === "โอนผ่านธนาคาร") {
+                    $update_stock_sql = "UPDATE product_sizes SET Stock = Stock - ? WHERE ProductID = ? AND Size = ?";
+                    $update_stock_stmt = $conn->prepare($update_stock_sql);
+                    $update_stock_stmt->bind_param("iis", $item['quantity'], $item['product_id'], $size);
+                    $update_stock_stmt->execute();
+                }
             }
 
-            // ล้างข้อมูลใน cart
+            // Empty cart after order placement
             $delete_cart_sql = "DELETE FROM cart WHERE user_id = ?";
             $delete_cart_stmt = $conn->prepare($delete_cart_sql);
             $delete_cart_stmt->bind_param("i", $user_id);
             $delete_cart_stmt->execute();
 
-            // Redirect ไปหน้าสำเร็จ
+            // Redirect to success page
             header("Location: success.php?order_id=$order_id");
             exit;
         } else {
@@ -102,7 +127,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -137,7 +164,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .qr-code {
             width: 450px;
-            /* ขนาดที่ใหญ่ขึ้น */
             height: auto;
             display: block;
             margin: auto;
@@ -172,7 +198,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $total_before_fees = $total; // เก็บค่าราคารวมของสินค้าไว้ก่อนบวกค่าธรรมเนียม
                 $total += $shipping_fee + $service_fee; // บวกค่าธรรมเนียมและค่าจัดส่ง
-
                 ?>
 
                 <tbody>
@@ -199,7 +224,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="hidden" name="total_price" value="<?php echo $total; ?>">
                     </tr>
                 </tbody>
-
             </table>
 
             <h4 class="mt-4">ที่อยู่จัดส่ง</h4>
@@ -211,13 +235,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <select name="payment_method" id="payment_method" class="form-control" required>
                 <option value="เก็บเงินปลายทาง">เก็บเงินปลายทาง</option>
                 <option value="โอนผ่านธนาคาร">พร้อมเพย์/โอนผ่านธนาคาร</option>
-
-
-
             </select>
+
             <div id="payment_proof_section" class="mt-3" style="display: none;">
                 <div class="text-center">
-                    <label class="form-label fw-bold fs-5">QR พร้อมเพย์ / ธนาคาร:</label>
+                    <label class="form-label fw-bold fs-5">QR พร้อมเพย์ / ธนาคาร: <br> ชื่อบัญชี: &nbsp;Kittinan Srisawat </label>
                     <div class="qr-container mt-4 mb-4">
                         <img src="assets/bank/prom.jpg" alt="QR พร้อมเพย์ / ธนาคาร" class="qr-code">
                     </div>
@@ -228,7 +250,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-
             <script>
                 document.getElementById("payment_method").addEventListener("change", function() {
                     var proofSection = document.getElementById("payment_proof_section");
@@ -236,26 +257,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     if (this.value === "พร้อมเพย์" || this.value === "โอนผ่านธนาคาร") {
                         proofSection.style.display = "block";
-                        proofInput.required = true; // บังคับให้แนบไฟล์
+                        proofInput.required = true;
                     } else {
                         proofSection.style.display = "none";
-                        proofInput.required = false; // ไม่บังคับถ้าเลือกวิธีอื่น
+                        proofInput.required = false;
                     }
                 });
 
-                document.getElementById("checkoutForm").addEventListener("submit", function(event) {
-                    var paymentMethod = document.getElementById("payment_method").value;
-                    var proofInput = document.getElementById("payment_proof");
-
-                    if ((paymentMethod === "พร้อมเพย์" || paymentMethod === "โอนผ่านธนาคาร") && proofInput.files.length === 0) {
-                        alert("กรุณาแนบสลิปการโอนเงินก่อนกดยืนยัน!");
-                        event.preventDefault(); // ป้องกันการส่งฟอร์ม
+                document.getElementById("payment_proof").addEventListener("change", function() {
+                    var file = this.files[0];
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            var imageElement = document.createElement("img");
+                            imageElement.src = e.target.result;
+                            imageElement.style.maxWidth = '200px';
+                            document.getElementById("payment_proof_section").appendChild(imageElement);
+                        };
+                        reader.readAsDataURL(file);
                     }
                 });
             </script>
+
             <div class="d-flex justify-content-between mt-4">
                 <a href="cart.php" class="btn btn-light border" style="border: 1px solid;">ย้อนกลับ</a>
-                <button type="submit" class="btn btn-dark" >ยืนยันการชำระเงิน</button>
+                <button type="submit" class="btn btn-dark">ยืนยันการชำระเงิน</button>
             </div>
         </form>
     </div>
