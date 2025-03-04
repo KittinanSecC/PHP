@@ -190,7 +190,7 @@ include("structure.php");
                     <div class="col position-relative">
                         <a href="product.php?category=Men" class="image-container">
                             <img src="myfile/runf.jpg" alt="รองเท้าผู้ชาย" class="img-fluid">
-                            <h5 class="text-on-image">รองเท้าผู้ชาย</h5>
+                            <h5 class="text-on-image">รองเท้าผู้หญิง</h5>
                             <a href="product.php?category=Men" class="btn btn-dark btn-lg text-button" style="border-radius: 25px;">เลือกซื้อ</a>
                         </a>
                     </div>
